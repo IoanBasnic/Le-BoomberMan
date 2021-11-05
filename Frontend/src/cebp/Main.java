@@ -1,8 +1,29 @@
 package cebp;
 
+import cebp.controllers.GameScreen;
+
 public class Main {
 
+    // Constants
+    private static final int SCREEN_WIDTH = 30; // Columns
+    private static final int SCREEN_HEIGHT = 30; // Rows
+
+    private static final int PLAYER_START_1_X =    0;
+    private static final int PLAYER_START_1_Y =    0;
+
+    private static final int PLAYER_START_2_X =    SCREEN_HEIGHT;
+    private static final int PLAYER_START_2_Y =    0;
+
+    private static final int PLAYER_START_3_X =    0;
+    private static final int PLAYER_START_3_Y =    SCREEN_WIDTH;
+
+    private static final int PLAYER_START_4_X =    SCREEN_HEIGHT;
+    private static final int PLAYER_START_4_Y =    SCREEN_WIDTH;
+
     public static void main(String[] args) {
-	// write your code here
+
+        // Init screen
+        GameScreen screen = new GameScreen(SCREEN_WIDTH, SCREEN_HEIGHT);
+        screen.InitScreen();
     }
 }
