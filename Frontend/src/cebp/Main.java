@@ -1,6 +1,7 @@
 package cebp;
 
 import cebp.controllers.GameScreen;
+import cebp.utils.GameMap;
 
 public class Main {
 
@@ -25,5 +26,13 @@ public class Main {
         // Init screen
         GameScreen screen = new GameScreen(SCREEN_WIDTH, SCREEN_HEIGHT);
         screen.InitScreen();
+
+        // Init walls
+        GameMap wall = new GameMap('#');
+        wall.addWallsRow(screen, wall, 0); // First row
+        wall.addWallsRow(screen, wall, screen.getScreenHeight() - 1); // Last
+        // row
+        wall.addWallsColumn(screen, wall, 0); // First column
+        wall.addWallsColumn(screen, wall, screen.getScreenWidth() - 1); // Last
     }
 }
