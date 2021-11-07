@@ -11,28 +11,33 @@ public class Player extends GameObject {
         setY(yStartingLocation);
     }
 
-    public void moveLeft(GameScreen screen, Player player) {
+    public void MoveLeft(GameScreen screen, Player player) {
         player.setX(getX() - 1);
         screen.setObjectOnLocation(player, player.getX(), player.getY());
         screen.ClearScreenLocation(player.getX() + 1, player.getY());
     }
 
-    public void moveRight(GameScreen screen, Player player) {
+    public void MoveRight(GameScreen screen, Player player) {
         player.setX(getX() + 1);
         screen.setObjectOnLocation(player, player.getX(), player.getY());
         screen.ClearScreenLocation(player.getX() - 1, player.getY());
     }
 
-    public void moveUp(GameScreen screen, Player player) {
+    public void MoveUp(GameScreen screen, Player player) {
         player.setY(getY() - 1);
         screen.setObjectOnLocation(player, player.getX(), player.getY());
         screen.ClearScreenLocation(player.getX(), player.getY() + 1);
     }
 
-    public void moveDown(GameScreen screen, Player player) {
+    public void MoveDown(GameScreen screen, Player player) {
         player.setY(getY() + 1);
         screen.setObjectOnLocation(player, player.getX(), player.getY());
         screen.ClearScreenLocation(player.getX(), player.getY() - 1);
     }
 
+    // WIP
+    public void PutBomb(GameScreen screen, Player player) {
+        screen.setObjectOnLocation(player, player.getX(), player.getY());
+        screen.ClearScreenLocation(player.getX(), player.getY() - 1);
+    }
 }

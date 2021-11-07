@@ -1,4 +1,4 @@
-package cebp;
+package cebp.players;
 
 import cebp.controllers.Crates;
 import cebp.controllers.GameScreen;
@@ -8,7 +8,7 @@ import cebp.utils.Player;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class Main {
+public class Player3 {
 
     // Constants
     private static final int SCREEN_WIDTH = 60; // Columns
@@ -69,31 +69,6 @@ public class Main {
             screen.PrintScreen();
             // Get input from player and do something
             switch (input = scanner.nextLine().charAt(0)) {
-                case 'a':
-                    player_1.MoveLeft(screen, player_1);
-                    break;
-                case 'd':
-                    player_1.MoveRight(screen, player_1);
-                    break;
-                case 'w':
-                    player_1.MoveUp(screen, player_1);
-                    break;
-                case 's':
-                    player_1.MoveDown(screen, player_1);
-                    break;
-
-                case 'h':
-                    player_2.MoveLeft(screen, player_2);
-                    break;
-                case 'k':
-                    player_2.MoveRight(screen, player_2);
-                    break;
-                case 'u':
-                    player_2.MoveUp(screen, player_2);
-                    break;
-                case 'j':
-                    player_2.MoveDown(screen, player_2);
-                    break;
 
                 case '4':
                     player_3.MoveLeft(screen, player_3);
@@ -106,19 +81,6 @@ public class Main {
                     break;
                 case '5':
                     player_3.MoveDown(screen, player_3);
-                    break;
-
-                case 'l':
-                    player_4.MoveLeft(screen, player_4);
-                    break;
-                case '\'':
-                    player_4.MoveRight(screen, player_4);
-                    break;
-                case 'p':
-                    player_4.MoveUp(screen, player_4);
-                    break;
-                case ';':
-                    player_4.MoveDown(screen, player_4);
                     break;
 
             }
