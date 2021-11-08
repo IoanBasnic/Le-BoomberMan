@@ -1,6 +1,5 @@
-package frontend.utils;
+package frontend.game_components;
 
-import frontend.controllers.GameObject;
 import map_tracker.GameScreen;
 
 public class Player extends GameObject {

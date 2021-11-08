@@ -1,9 +1,9 @@
-package cebp.players;
+package frontend.players;
 
-import cebp.controllers.Crates;
-import cebp.controllers.GameScreen;
-import cebp.utils.GameMap;
-import cebp.utils.Player;
+import frontend.game_components.Crates;
+import map_tracker.GameScreen;
+import map_tracker.GameMapInitializer;
+import frontend.game_components.Player;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -33,7 +33,7 @@ public class Player2 {
         screen.InitScreen();
 
         // Init walls
-        GameMap wall = new GameMap('#');
+        GameMapInitializer wall = new GameMapInitializer('#');
         wall.addWallsRow(screen, wall, 0); // First row
         wall.addWallsRow(screen, wall, screen.getScreenHeight() - 1); // Last
 

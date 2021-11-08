@@ -1,7 +1,6 @@
-package frontend.utils;
+package map_tracker;
 
-import frontend.controllers.GameObject;
-import map_tracker.GameScreen;
+import frontend.game_components.GameObject;
 
 public class GameMapInitializer extends GameObject {
 

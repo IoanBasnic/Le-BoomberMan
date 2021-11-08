@@ -1,4 +1,4 @@
-package frontend.controllers;
+package frontend.game_components;
 
 public class GameObject {
 
