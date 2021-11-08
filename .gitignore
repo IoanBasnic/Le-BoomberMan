@@ -12,6 +12,8 @@
 .idea/
 out/
 graddle/
+.gradle/
+build/
 
 # Package Files #
 *.jar
