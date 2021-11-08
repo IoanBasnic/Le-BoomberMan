@@ -1,27 +1,27 @@
-package cebp.utils;
+package frontend.utils;
 
-import cebp.controllers.GameObject;
-import cebp.controllers.GameScreen;
+import frontend.controllers.GameObject;
+import map_tracker.GameScreen;
 
-public class GameMap extends GameObject {
+public class GameMapInitializer extends GameObject {
 
-    public GameMap() {
+    public GameMapInitializer() {
         setSymbol('#');
     }
 
-    public GameMap(char symbol) {
+    public GameMapInitializer(char symbol) {
         setSymbol(symbol);
     }
 
     // Add horizontal line of walls
-    public void addWallsRow(GameScreen screen, GameMap wall, int rowNumber) {
+    public void addWallsRow(GameScreen screen, GameMapInitializer wall, int rowNumber) {
         for (int i = 0; i < screen.getScreenWidth(); i++) {
             screen.setObjectOnLocation(wall, i, rowNumber);
         }
     }
 
     // Add vertical line of walls
-    public void addWallsColumn(GameScreen screen, GameMap wall, int columnNumber) {
+    public void addWallsColumn(GameScreen screen, GameMapInitializer wall, int columnNumber) {
         for (int i = 0; i < screen.getScreenHeight(); i++) {
             screen.setObjectOnLocation(wall, columnNumber, i);
         }

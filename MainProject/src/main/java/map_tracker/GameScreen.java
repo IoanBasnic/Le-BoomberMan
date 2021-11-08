@@ -1,4 +1,4 @@
-package cebp.controllers;
+package frontend.controllers;
 
 public class GameScreen {
 

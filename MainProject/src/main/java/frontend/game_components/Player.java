@@ -1,7 +1,7 @@
-package cebp.utils;
+package frontend.utils;
 
-import cebp.controllers.GameObject;
-import cebp.controllers.GameScreen;
+import frontend.controllers.GameObject;
+import map_tracker.GameScreen;
 
 public class Player extends GameObject {
 
