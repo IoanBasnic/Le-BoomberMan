@@ -1,4 +1,6 @@
-package cebp.controllers;
+package frontend.game_components;
+
+import map_tracker.GameScreen;
 
 public class Crates extends GameObject {
 

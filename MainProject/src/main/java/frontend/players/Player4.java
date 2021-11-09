@@ -1,14 +1,14 @@
-package cebp;
+package frontend.players;
 
-import cebp.controllers.Crates;
-import cebp.controllers.GameScreen;
-import cebp.utils.GameMap;
-import cebp.utils.Player;
+import frontend.game_components.Crates;
+import map_tracker.GameScreen;
+import map_tracker.GameMapInitializer;
+import frontend.game_components.Player;
 
 import java.io.IOException;
 import java.util.Scanner;
 
-public class Main {
+public class Player4 {
 
     // Constants
     private static final int SCREEN_WIDTH = 60; // Columns
@@ -33,7 +33,7 @@ public class Main {
         screen.InitScreen();
 
         // Init walls
-        GameMap wall = new GameMap('#');
+        GameMapInitializer wall = new GameMapInitializer('#');
         wall.addWallsRow(screen, wall, 0); // First row
         wall.addWallsRow(screen, wall, screen.getScreenHeight() - 1); // Last
 
@@ -69,45 +69,6 @@ public class Main {
             screen.PrintScreen();
             // Get input from player and do something
             switch (input = scanner.nextLine().charAt(0)) {
-                case 'a':
-                    player_1.MoveLeft(screen, player_1);
-                    break;
-                case 'd':
-                    player_1.MoveRight(screen, player_1);
-                    break;
-                case 'w':
-                    player_1.MoveUp(screen, player_1);
-                    break;
-                case 's':
-                    player_1.MoveDown(screen, player_1);
-                    break;
-
-                case 'h':
-                    player_2.MoveLeft(screen, player_2);
-                    break;
-                case 'k':
-                    player_2.MoveRight(screen, player_2);
-                    break;
-                case 'u':
-                    player_2.MoveUp(screen, player_2);
-                    break;
-                case 'j':
-                    player_2.MoveDown(screen, player_2);
-                    break;
-
-                case '4':
-                    player_3.MoveLeft(screen, player_3);
-                    break;
-                case '6':
-                    player_3.MoveRight(screen, player_3);
-                    break;
-                case '8':
-                    player_3.MoveUp(screen, player_3);
-                    break;
-                case '5':
-                    player_3.MoveDown(screen, player_3);
-                    break;
-
                 case 'l':
                     player_4.MoveLeft(screen, player_4);
                     break;

@@ -1,4 +1,6 @@
-package cebp.controllers;
+package map_tracker;
+
+import frontend.game_components.GameObject;
 
 public class GameScreen {
 

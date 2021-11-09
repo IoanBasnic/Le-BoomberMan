@@ -1,14 +1,12 @@
-package cebp.players;
-
-import cebp.controllers.Crates;
-import cebp.controllers.GameScreen;
-import cebp.utils.GameMap;
-import cebp.utils.Player;
+import frontend.game_components.Crates;
+import map_tracker.GameScreen;
+import map_tracker.GameMapInitializer;
+import frontend.game_components.Player;
 
 import java.io.IOException;
 import java.util.Scanner;
 
-public class Player4 {
+public class Main {
 
     // Constants
     private static final int SCREEN_WIDTH = 60; // Columns
@@ -33,7 +31,7 @@ public class Player4 {
         screen.InitScreen();
 
         // Init walls
-        GameMap wall = new GameMap('#');
+        GameMapInitializer wall = new GameMapInitializer('#');
         wall.addWallsRow(screen, wall, 0); // First row
         wall.addWallsRow(screen, wall, screen.getScreenHeight() - 1); // Last
 
@@ -42,20 +40,20 @@ public class Player4 {
         wall.addWallsColumn(screen, wall, screen.getScreenWidth() - 1); // Last
 
         // Init players
-        Player player_1 = new Player('@', PLAYER_START_1_X, PLAYER_START_1_Y);
+        Player player_1 = new Player('1', PLAYER_START_1_X, PLAYER_START_1_Y);
         screen.setObjectOnLocation(player_1, player_1.getX(), player_1.getY());
 
-        Player player_2 = new Player('@', PLAYER_START_2_X, PLAYER_START_2_Y);
+        Player player_2 = new Player('2', PLAYER_START_2_X, PLAYER_START_2_Y);
         screen.setObjectOnLocation(player_2, player_2.getX(), player_2.getY());
 
-        Player player_3 = new Player('@', PLAYER_START_3_X, PLAYER_START_3_Y);
+        Player player_3 = new Player('3', PLAYER_START_3_X, PLAYER_START_3_Y);
         screen.setObjectOnLocation(player_3, player_3.getX(), player_3.getY());
 
-        Player player_4 = new Player('@', PLAYER_START_4_X, PLAYER_START_4_Y);
+        Player player_4 = new Player('4', PLAYER_START_4_X, PLAYER_START_4_Y);
         screen.setObjectOnLocation(player_4, player_4.getX(), player_4.getY());
 
         // Init crates
-        Crates crates = new Crates('*');
+        Crates crates = new Crates('▢');
         Crates.addRandomCrates(screen, crates);
 
         // Input from player
@@ -69,6 +67,45 @@ public class Player4 {
             screen.PrintScreen();
             // Get input from player and do something
             switch (input = scanner.nextLine().charAt(0)) {
+                case 'a':
+                    player_1.MoveLeft(screen, player_1);
+                    break;
+                case 'd':
+                    player_1.MoveRight(screen, player_1);
+                    break;
+                case 'w':
+                    player_1.MoveUp(screen, player_1);
+                    break;
+                case 's':
+                    player_1.MoveDown(screen, player_1);
+                    break;
+
+                case 'h':
+                    player_2.MoveLeft(screen, player_2);
+                    break;
+                case 'k':
+                    player_2.MoveRight(screen, player_2);
+                    break;
+                case 'u':
+                    player_2.MoveUp(screen, player_2);
+                    break;
+                case 'j':
+                    player_2.MoveDown(screen, player_2);
+                    break;
+
+                case '4':
+                    player_3.MoveLeft(screen, player_3);
+                    break;
+                case '6':
+                    player_3.MoveRight(screen, player_3);
+                    break;
+                case '8':
+                    player_3.MoveUp(screen, player_3);
+                    break;
+                case '5':
+                    player_3.MoveDown(screen, player_3);
+                    break;
+
                 case 'l':
                     player_4.MoveLeft(screen, player_4);
                     break;
@@ -82,6 +119,8 @@ public class Player4 {
                     player_4.MoveDown(screen, player_4);
                     break;
 
+                case 'q':
+                    isRunning = false;
             }
         }
     }
