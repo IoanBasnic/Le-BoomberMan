@@ -11,10 +11,10 @@ public class Bomb
     private int explosionRadius;
     private boolean playerLeft;
 
-    public Bomb(final int rowIndex, final int colIndex, int explosionRadius) {
+    public Bomb(final int rowIndex, final int colIndex) {
         this.rowIndex = rowIndex;
         this.colIndex = colIndex;
-        this.explosionRadius = explosionRadius;
+        this.explosionRadius = 1;
         playerLeft = false;
     }
 

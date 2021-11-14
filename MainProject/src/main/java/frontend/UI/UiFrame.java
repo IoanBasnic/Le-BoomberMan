@@ -11,16 +11,13 @@ import java.awt.event.KeyEvent;
 
 public class UiFrame extends JFrame
 {
-    private GameMapInitializer floor;
     private UiComponent uiComponent;
 
-    public UiFrame(final String title, GameMapInitializer floor) throws HeadlessException {
+    public UiFrame(final String title, GameMapInitializer gameMapInitializer) throws HeadlessException {
 	super(title);
-	this.floor = floor;
 	this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-	uiComponent = new UiComponent(floor);
-	floor.createPlayer(uiComponent, floor);
-	setKeyStrokes();
+	uiComponent = new UiComponent(gameMapInitializer);
+	gameMapInitializer.createPlayer(uiComponent, gameMapInitializer);
 
 	this.setLayout(new BorderLayout());
 	this.add(uiComponent, BorderLayout.CENTER);
@@ -31,20 +28,5 @@ public class UiFrame extends JFrame
     public UiComponent getUiComponent() {
 	return uiComponent;
     }
-
-    private void setKeyStrokes() {
-
-	KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
-	uiComponent.getInputMap().put(stroke, "q");
-	uiComponent.getActionMap().put("q", quit);
-    }
-
-    private final Action quit = new AbstractAction()
-    {
-	public void actionPerformed(ActionEvent e) {
-		dispose();
-	    
-	}
-    };
 }
 

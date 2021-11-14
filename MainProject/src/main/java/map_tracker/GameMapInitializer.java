@@ -227,16 +227,17 @@ public class GameMapInitializer {
 
 
     public boolean collisionWithBombs(Player player) {
-        boolean playerLeftBomb = true;
-
-        for (Bomb bomb : bombList) {
-            if (player instanceof Player) {
-                playerLeftBomb = bomb.isPlayerLeft();
-            }
-            if(playerLeftBomb && collidingCircles(player, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
-                return true;
-            }
-        }
+//        boolean playerLeftBomb = true;
+//
+//        for (Bomb bomb : bombList) {
+//            if (player != null) {
+//                playerLeftBomb = bomb.isPlayerLeft();
+//            }
+//            assert player != null;
+//            if(playerLeftBomb && collidingCircles(player, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
+//                return true;
+//            }
+//        }
         return false;
     }
 
@@ -267,19 +268,10 @@ public class GameMapInitializer {
     }
 
 
-    public void checkIfPlayerLeftBomb(){
+    public void checkIfPlayerLeftBomb(Player player){
         for (Bomb bomb: bombList) {
             if(!bomb.isPlayerLeft()){
-                if(!collidingCircles(player1, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
-                    bomb.setPlayerLeft(true);
-                }
-                if(!collidingCircles(player2, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
-                    bomb.setPlayerLeft(true);
-                }
-                if(!collidingCircles(player3, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
-                    bomb.setPlayerLeft(true);
-                }
-                if(!collidingCircles(player4, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
+                if(!collidingCircles(player, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
                     bomb.setPlayerLeft(true);
                 }
             }
