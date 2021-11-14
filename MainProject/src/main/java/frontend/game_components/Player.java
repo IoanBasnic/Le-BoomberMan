@@ -1,7 +1,6 @@
 package frontend.game_components;
 
 import action_and_validation_tracker.ActionTracker;
-import player_and_bomb_tracker.Bomb;
 import frontend.UI.UiComponent;
 import map_tracker.GameMapInitializer;
 
@@ -56,29 +55,11 @@ public class Player extends GameObject {
     }
 
     public void setPlayerButtons(char r, char l, char u, char d, char placeBomb, UiComponent uiComponent){ //set action_tracker => needs to be changed
-        uiComponent.getInputMap().put(KeyStroke.getKeyStroke(r), "moveRight");
-        uiComponent.getInputMap().put(KeyStroke.getKeyStroke(l), "moveLeft");
-        uiComponent.getInputMap().put(KeyStroke.getKeyStroke(u), "moveUp");
-        uiComponent.getInputMap().put(KeyStroke.getKeyStroke(d), "moveDown");
-        uiComponent.getInputMap().put(KeyStroke.getKeyStroke(placeBomb), "dropBomb");
-        uiComponent.getActionMap().put("moveRight", right);
-        uiComponent.getActionMap().put("moveLeft", left);
-        uiComponent.getActionMap().put("moveUp", up);
-        uiComponent.getActionMap().put("moveDown", down);
-        uiComponent.getActionMap().put("dropBomb", dropBomb);
+        actionTracker.setKeys( r, l, u, d, placeBomb, uiComponent, Player.this);
     }
 
     public void setPlayerButtons(String r, String l, String u, String d, String placeBomb, UiComponent uiComponent){ //set action_tracker => needs to be changed
-        uiComponent.getInputMap().put(KeyStroke.getKeyStroke(r), "moveRight");
-        uiComponent.getInputMap().put(KeyStroke.getKeyStroke(l), "moveLeft");
-        uiComponent.getInputMap().put(KeyStroke.getKeyStroke(u), "moveUp");
-        uiComponent.getInputMap().put(KeyStroke.getKeyStroke(d), "moveDown");
-        uiComponent.getInputMap().put(KeyStroke.getKeyStroke(placeBomb), "dropBomb");
-        uiComponent.getActionMap().put("moveRight", right);
-        uiComponent.getActionMap().put("moveLeft", left);
-        uiComponent.getActionMap().put("moveUp", up);
-        uiComponent.getActionMap().put("moveDown", down);
-        uiComponent.getActionMap().put("dropBomb", dropBomb);
+        actionTracker.setKeys( r, l, u, d, placeBomb, uiComponent, Player.this);
     }
 
     public void playerMoveBack(Move move) {

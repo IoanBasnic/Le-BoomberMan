@@ -12,6 +12,8 @@ import java.util.*;
 public class GameMapInitializer {
     private final static double CHANCE_FOR_BREAKABLE_BLOCK = 0.5;
     private final BlockEntityEnum[][] tiles;
+    private static int PLAYER_X_START = 60;
+    private static int PLAYER_Y_START = 60;
     private int width;
     private int height;
     private Collection<MapListenerInterface> mapListenerInterfaces = new ArrayList<>();
@@ -19,11 +21,11 @@ public class GameMapInitializer {
     private Player player2 = null;
     private Player player3 = null;
     private Player player4 = null;
-    private BombTracker bombTracker = new BombTracker();
+
     private List<Bomb> bombList= new ArrayList<>();
     private Collection<Bomb> explosionList= new ArrayList<>();
     private Collection<BombExplosion> bombExplosionCoords = new ArrayList<>();
-    private boolean isGameOver = false;
+    public boolean isGameOver = false;
 
     public GameMapInitializer(int width, int height) {
         this.width = width;
@@ -61,6 +63,7 @@ public class GameMapInitializer {
     public Player getPlayer4() {
         return player4;
     }
+
     public Iterable<Bomb> getBombList() {
         return bombList;
     }
@@ -81,8 +84,6 @@ public class GameMapInitializer {
         bombList.add(bomb);
     }
 
-    static int PLAYER_X_START = 60;
-    static int PLAYER_Y_START = 60;
     public void createPlayer(UiComponent uiComponent, GameMapInitializer floor){
         player1 = new Player(PLAYER_X_START, PLAYER_Y_START, floor);
         player1.setPlayerButtons('d', 'a', 'w', 's', 'x', uiComponent);
@@ -226,7 +227,7 @@ public class GameMapInitializer {
     }
 
 
-    public boolean collisionWithBombs(Player player) {
+    public boolean collisionWithBombs(Player player) { //doesn't work
 //        boolean playerLeftBomb = true;
 //
 //        for (Bomb bomb : bombList) {
@@ -278,7 +279,7 @@ public class GameMapInitializer {
         }
     }
 
-    private boolean bombCoordinateCheck(int eRow, int eCol, boolean open){
+    public boolean bombCoordinateCheck(int eRow, int eCol, boolean open){
         if(tiles[eRow][eCol] != BlockEntityEnum.GRASS){open = false;}
         if(tiles[eRow][eCol] == BlockEntityEnum.CRATE){
             tiles[eRow][eCol] = BlockEntityEnum.GRASS;
@@ -298,7 +299,7 @@ public class GameMapInitializer {
     }
 
     private boolean squareCircleInstersect(int row, int col, Player player) {
-        //http://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
+        // http://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
         int characterX = player.getX();
         int characterY = player.getY();
 
