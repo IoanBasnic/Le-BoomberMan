@@ -1,9 +1,9 @@
 package frontend.game_components;
 
+import action_and_validation_tracker.ActionTracker;
 import player_and_bomb_tracker.Bomb;
 import frontend.UI.UiComponent;
 import map_tracker.GameMapInitializer;
-//import map_tracker.GameScreen;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -14,31 +14,33 @@ public class Player extends GameObject {
     private int explosionRadius;
     private int bombCount;
     private GameMapInitializer floor;
+    private ActionTracker actionTracker = new ActionTracker();
 
     public Action up = new AbstractAction() {
         public void actionPerformed(ActionEvent e) {
-            movePlayer(Move.UP);
+            System.out.println("hi)");
+            actionTracker.movePlayer(Move.UP, Player.this, floor);
 
         }
     };
 
     public Action right = new AbstractAction() {
         public void actionPerformed(ActionEvent e) {
-            movePlayer(Move.RIGHT);
+            actionTracker.movePlayer(Move.RIGHT, Player.this, floor);
 
         }
     };
 
     public Action down = new AbstractAction() {
         public void actionPerformed(ActionEvent e) {
-            movePlayer(Move.DOWN);
+            actionTracker.movePlayer(Move.DOWN, Player.this, floor);
 
         }
     };
 
     public Action left = new AbstractAction() {
         public void actionPerformed(ActionEvent e) {
-            movePlayer(Move.LEFT);
+            actionTracker.movePlayer(Move.LEFT, Player.this, floor);
 
         }
     };
@@ -54,7 +56,7 @@ public class Player extends GameObject {
         }
     };
 
-    public Player(int PLAYER_START_X, int PLAYER_START_Y, UiComponent uiComponent, GameMapInitializer floor) {
+    public Player(int PLAYER_START_X, int PLAYER_START_Y, GameMapInitializer floor) {
         super(PLAYER_START_X, PLAYER_START_Y, PLAYER_PIXELS_BY_STEP);
         explosionRadius = 1;
         bombCount = 1;
@@ -107,4 +109,11 @@ public class Player extends GameObject {
         floor.notifyListeners();
     }
 
+    public void playerMoveBack(Move move) {
+        moveBack(move);
+    }
+
+    public void playerMove(Move move) {
+        move(move);
+    }
 }

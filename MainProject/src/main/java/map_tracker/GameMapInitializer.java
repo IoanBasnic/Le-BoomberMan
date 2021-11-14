@@ -84,16 +84,16 @@ public class GameMapInitializer {
     static int PLAYER_X_START = 60;
     static int PLAYER_Y_START = 60;
     public void createPlayer(UiComponent uiComponent, GameMapInitializer floor){
-        player1 = new Player(PLAYER_X_START, PLAYER_Y_START, uiComponent, floor);
+        player1 = new Player(PLAYER_X_START, PLAYER_Y_START, floor);
         player1.setPlayerButtons('d', 'a', 'w', 's', 'x', uiComponent);
 
-        player2 = new Player(PLAYER_X_START * 12+20, PLAYER_Y_START, uiComponent, floor);
+        player2 = new Player(PLAYER_X_START * 12+20, PLAYER_Y_START, floor);
         player2.setPlayerButtons('k', 'h', 'u', 'j', 'm', uiComponent);
 
-        player3 = new Player(PLAYER_X_START, PLAYER_Y_START * 12+20, uiComponent, floor);
+        player3 = new Player(PLAYER_X_START, PLAYER_Y_START * 12+20, floor);
         player3.setPlayerButtons("RIGHT", "LEFT", "UP", "DOWN", "SPACE", uiComponent);
 
-        player4 = new Player(PLAYER_X_START * 12-20, PLAYER_Y_START * 12+20, uiComponent, floor);
+        player4 = new Player(PLAYER_X_START * 12-20, PLAYER_Y_START * 12+20, floor);
         player4.setPlayerButtons('6', '4', '8', '5', '2', uiComponent);
     }
 
