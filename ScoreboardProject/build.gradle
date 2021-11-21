@@ -14,6 +14,11 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     implementation 'org.xerial:sqlite-jdbc:3.30.1'
     implementation 'org.apache.kafka:kafka-clients:2.5.0'
+
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.8.8'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.8.8'
+
 }
 
 test {
