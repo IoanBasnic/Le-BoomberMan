@@ -1,17 +1,20 @@
-import kafka.KafkaConsumerUtils;
-
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import domain.GameStartData;
+import kafka.KafkaConsumerGameInitializer;
+import kafka.KafkaConsumerInputData;
+import kafka.KafkaProducerOutputData;
+import processing.DataProcessor;
 
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
-        KafkaConsumerUtils kafkaConsumerUtils = new KafkaConsumerUtils();
-        kafkaConsumerUtils.runConsumer();
-    }
+        KafkaConsumerGameInitializer kafkaConsumerGameInitializer = new KafkaConsumerGameInitializer();
+        GameStartData gameStartData = kafkaConsumerGameInitializer.runConsumer();
 
+        KafkaProducerOutputData kafkaProducer = new KafkaProducerOutputData();
+        DataProcessor dataProcessor = new DataProcessor(gameStartData, kafkaProducer);
+
+        KafkaConsumerInputData kafkaConsumerInputData = new KafkaConsumerInputData(dataProcessor);
+        kafkaConsumerInputData.runConsumer();
+    }
 }
 
