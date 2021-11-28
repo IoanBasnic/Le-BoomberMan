@@ -6,11 +6,11 @@ import java.util.List;
 
 public class InputData {
     @JsonProperty("playerId")
-    public String playerId;
+    public Integer playerId;
 
     @JsonProperty("boxesDestroyed")
     public int boxesDestroyed;
 
     @JsonProperty("playerLivesTaken")
-    public List<String> playerLivesTaken;
+    public List<Integer> playerLivesTaken;
 }
