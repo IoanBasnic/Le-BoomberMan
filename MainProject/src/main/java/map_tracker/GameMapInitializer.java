@@ -1,11 +1,13 @@
 package map_tracker;
 
+import action_and_validation_tracker.ActionTracker;
 import player_and_bomb_tracker.Bomb;
 import player_and_bomb_tracker.BombExplosion;
 import frontend.UI.UiComponent;
 import frontend.game_components.Player;
 import player_and_bomb_tracker.BombTracker;
 
+import javax.swing.*;
 import java.util.*;
 
 
@@ -86,16 +88,12 @@ public class GameMapInitializer {
 
     public void createPlayer(UiComponent uiComponent, GameMapInitializer floor){
         player1 = new Player(PLAYER_X_START, PLAYER_Y_START, floor);
-        player1.setPlayerButtons('d', 'a', 'w', 's', 'x', uiComponent);
-
         player2 = new Player(PLAYER_X_START * 12+20, PLAYER_Y_START, floor);
-        player2.setPlayerButtons('k', 'h', 'u', 'j', 'm', uiComponent);
-
         player3 = new Player(PLAYER_X_START, PLAYER_Y_START * 12+20, floor);
-        player3.setPlayerButtons("RIGHT", "LEFT", "UP", "DOWN", "SPACE", uiComponent);
-
         player4 = new Player(PLAYER_X_START * 12-20, PLAYER_Y_START * 12+20, floor);
-        player4.setPlayerButtons('6', '4', '8', '5', '2', uiComponent);
+
+        ActionTracker a = new ActionTracker();
+        a.setKeys(uiComponent, player1, player2, player3, player4);
     }
 
     public int squareToPixel(int squareCoord){
@@ -227,18 +225,18 @@ public class GameMapInitializer {
     }
 
 
-    public boolean collisionWithBombs(Player player) { //doesn't work
-//        boolean playerLeftBomb = true;
-//
-//        for (Bomb bomb : bombList) {
-//            if (player != null) {
-//                playerLeftBomb = bomb.isPlayerLeft();
-//            }
-//            assert player != null;
-//            if(playerLeftBomb && collidingCircles(player, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
-//                return true;
-//            }
-//        }
+    public boolean collisionWithBombs(Player player) {
+        boolean playerLeftBomb = true;
+
+        for (Bomb bomb : bombList) {
+            if (player != null) {
+                playerLeftBomb = bomb.isPlayerLeft();
+            }
+            assert player != null;
+            if(playerLeftBomb && collidingCircles(player, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
+                return true;
+            }
+        }
         return false;
     }
 

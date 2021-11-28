@@ -54,14 +54,6 @@ public class Player extends GameObject {
         this.floor = floor;
     }
 
-    public void setPlayerButtons(char r, char l, char u, char d, char placeBomb, UiComponent uiComponent){ //set action_tracker => needs to be changed
-        actionTracker.setKeys( r, l, u, d, placeBomb, uiComponent, Player.this);
-    }
-
-    public void setPlayerButtons(String r, String l, String u, String d, String placeBomb, UiComponent uiComponent){ //set action_tracker => needs to be changed
-        actionTracker.setKeys( r, l, u, d, placeBomb, uiComponent, Player.this);
-    }
-
     public void playerMoveBack(Move move) {
         moveBack(move);
     }
