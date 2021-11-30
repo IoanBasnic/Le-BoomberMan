@@ -14,6 +14,7 @@ out/
 graddle/
 .gradle/
 build/
+local.properties
 
 # Package Files #
 *.jar
