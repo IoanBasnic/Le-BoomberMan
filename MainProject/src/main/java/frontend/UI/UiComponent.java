@@ -16,7 +16,7 @@ import java.util.AbstractMap;
 import java.util.EnumMap;
 
 
-public class UiComponent extends JComponent implements MapListenerInterface
+public class UiComponent extends JComponent implements Runnable
 {
     // Constants are static by definition.
     private final static int SQUARE_SIZE = 40;
@@ -98,4 +98,12 @@ public class UiComponent extends JComponent implements MapListenerInterface
 	drawHearts.drawHearts(g2d, gameMapInitializer, SQUARE_SIZE);
     }
 
+	@Override
+	public void run() {
+		System.out.println("CALLED");
+		System.out.println(Thread.currentThread().getName());
+		while (true){
+			this.repaint();
+		}
+	}
 }

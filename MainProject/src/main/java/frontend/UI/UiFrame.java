@@ -17,7 +17,7 @@ public class UiFrame extends JFrame
 	super(title);
 	this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	uiComponent = new UiComponent(gameMapInitializer);
-	gameMapInitializer.createPlayer(uiComponent, gameMapInitializer);
+	gameMapInitializer.createPlayer(uiComponent);
 
 	this.setLayout(new BorderLayout());
 	this.add(uiComponent, BorderLayout.CENTER);

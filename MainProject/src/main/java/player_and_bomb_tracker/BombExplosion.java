@@ -24,7 +24,7 @@ public class BombExplosion
         return duration;
     }
 
-    public void setDuration(final int duration) {
+    public synchronized void setDuration(final int duration) {
         this.duration = duration;
     }
 }

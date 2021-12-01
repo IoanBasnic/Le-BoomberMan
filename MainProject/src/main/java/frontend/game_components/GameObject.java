@@ -25,25 +25,53 @@ public class GameObject
         private final int deltaX;
         private final int deltaY;
         Move(final int deltaX, final int deltaY) {
+            System.out.println("X: "+ deltaX + " Y: " + deltaY);
             this.deltaX = deltaX;
             this.deltaY = deltaY;
         }
+        public int getX(){
+            return this.deltaX;
+        }
+        public int getY(){
+            return this.deltaY;
+        }
     }
 
-    public void move(Move move) {
-        y += move.deltaY * pixelsPerStep;
-        x += move.deltaX * pixelsPerStep;
+    public void move(int deltaX, int deltaY) {
+        y += deltaY * pixelsPerStep;
+        x += deltaX * pixelsPerStep;
     }
 
-    public void moveBack(Move currentDirection) {
+    public void moveBack(Move currentDirection, int deltaX, int deltaY, GameMapInitializer floor) {
         if (currentDirection == Move.DOWN) {
-            move(Move.UP);
+           // System.out.println(deltaX + "  " + deltaY);
+            if(deltaX == -1){
+                move(1,0);
+            }
+            if(deltaX == 1){
+                move(-1,0);
+            }
+            move(0, -1);
         } else if (currentDirection == Move.UP) {
-            move(Move.DOWN);
+            move(0,1);
         } else if (currentDirection == Move.LEFT) {
-            move(Move.RIGHT);
+            //System.out.println(deltaX + "  " + deltaY);
+            if(deltaY == 1){
+                move(0, -1);
+            }
+            if(deltaY == -1){
+                move(0,1);
+            }
+            move(1, 0);
         } else if (currentDirection == Move.RIGHT) {
-            move(Move.LEFT);
+           // System.out.println(deltaX + "  " + deltaY);
+            if(deltaY == 1){
+                move(0, -1);
+            }
+            if(deltaY == -1){
+                move(0,1);
+            }
+            move(-1 , 0);
         }
     }
 
