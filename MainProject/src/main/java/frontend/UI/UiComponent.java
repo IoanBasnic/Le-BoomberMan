@@ -1,6 +1,8 @@
 package frontend.UI;
 
+import frontend.UI.DrawObject.DrawHearts;
 import frontend.UI.DrawObject.DrawObject;
+import frontend.UI.DrawObject.DrawScoreboard;
 import player_and_bomb_tracker.Bomb;
 import player_and_bomb_tracker.BombExplosion;
 import frontend.game_components.Player;
@@ -18,10 +20,13 @@ public class UiComponent extends JComponent implements MapListenerInterface
 {
     // Constants are static by definition.
     private final static int SQUARE_SIZE = 40;
+	private final static int SCOREBOARD_SIZE_AND_HEARTS_BOARD_SIZE = SQUARE_SIZE * 3;
     private final static int SQUARE_MIDDLE = SQUARE_SIZE/2;
     private final GameMapInitializer gameMapInitializer;
     private final AbstractMap<BlockEntityEnum, Color> colorMap;
     private DrawObject drawObject = new DrawObject();
+	private DrawScoreboard drawScoreboard = new DrawScoreboard();
+	private DrawHearts drawHearts = new DrawHearts();
 
     public UiComponent(GameMapInitializer gameMapInitializer) {
 	this.gameMapInitializer = gameMapInitializer;
@@ -44,7 +49,7 @@ public class UiComponent extends JComponent implements MapListenerInterface
 
     public Dimension getPreferredSize() {
 	super.getPreferredSize();
-	return new Dimension(this.gameMapInitializer.getWidth() * SQUARE_SIZE, this.gameMapInitializer.getHeight() * SQUARE_SIZE);
+	return new Dimension(this.gameMapInitializer.getWidth() * SQUARE_SIZE + SCOREBOARD_SIZE_AND_HEARTS_BOARD_SIZE, this.gameMapInitializer.getHeight() * SQUARE_SIZE);
     }
 
     public void UpdateMap() {
@@ -71,14 +76,26 @@ public class UiComponent extends JComponent implements MapListenerInterface
 	    }
 	}
 
+	for (int rowIndex = 0; rowIndex < gameMapInitializer.getHeight(); rowIndex++) {
+		for (int colIndex = gameMapInitializer.getWidth(); colIndex < this.gameMapInitializer.getWidth() + SQUARE_SIZE; colIndex++) {
+			drawObject.drawWall(rowIndex, colIndex, g2d);
+//			g2d.setFont(new Font("Google Sans", Font.PLAIN, 12));
+//			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//			g2d.drawString("Texting string", rowIndex, colIndex);
+//			g2d.setColor(Color.RED.brighter());
+//			g2d.dispose();
+		}
+	}
+
 	drawObject.drawPlayer1(gameMapInitializer.getPlayer1(), g2d);
 	drawObject.drawPlayer2(gameMapInitializer.getPlayer2(), g2d);
 	drawObject.drawPlayer3(gameMapInitializer.getPlayer3(), g2d);
 	drawObject.drawPlayer4(gameMapInitializer.getPlayer4(), g2d);
-
 	drawObject.drawBombs(g2d, gameMapInitializer);
-
 	drawObject.drawExplosion(g2d, gameMapInitializer);
+
+	drawScoreboard.drawScoreboard(g2d, gameMapInitializer, SQUARE_SIZE);
+	drawHearts.drawHearts(g2d, gameMapInitializer, SQUARE_SIZE);
     }
 
 }
