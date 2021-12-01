@@ -1,7 +1,6 @@
 package kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import domain.OutputData;
 import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.LongSerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -9,12 +8,10 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import java.util.Properties;
 
 public class BaseKafkaProducer {
-        private String topicName;
         Producer<Long, String> producer;
         ObjectMapper objectMapper = new ObjectMapper();
 
-        public BaseKafkaProducer(String topicName){
-            this.topicName = topicName;
+        public BaseKafkaProducer(){
             createProducer();
         }
 

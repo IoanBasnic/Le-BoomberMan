@@ -1,20 +1,20 @@
 import domain.GameStartData;
 import kafka.KafkaConsumerGameInitializer;
-import kafka.KafkaConsumerInputData;
-import kafka.KafkaProducerOutputData;
+import kafka.KafkaConsumerBombExplosion;
+import kafka.KafkaProducerProcessedResult;
 import processing.DataProcessor;
 
 public class Main {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         KafkaConsumerGameInitializer kafkaConsumerGameInitializer = new KafkaConsumerGameInitializer();
         GameStartData gameStartData = kafkaConsumerGameInitializer.runConsumer();
 
-        KafkaProducerOutputData kafkaProducer = new KafkaProducerOutputData();
+        KafkaProducerProcessedResult kafkaProducer = new KafkaProducerProcessedResult();
         DataProcessor dataProcessor = new DataProcessor(gameStartData, kafkaProducer);
 
-        KafkaConsumerInputData kafkaConsumerInputData = new KafkaConsumerInputData(dataProcessor);
-        kafkaConsumerInputData.runConsumer();
+        KafkaConsumerBombExplosion kafkaConsumerBombExplosion = new KafkaConsumerBombExplosion(dataProcessor);
+        kafkaConsumerBombExplosion.runConsumer();
     }
 }
 

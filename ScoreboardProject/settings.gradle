@@ -1,2 +1,4 @@
 rootProject.name = 'ScoreboardProject'
 
+include 'shared'
+project(':shared').projectDir = file('../shared')
