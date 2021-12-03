@@ -2,26 +2,36 @@ import frontend.UI.UiFrame;
 import map_tracker.GameMapInitializer;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class Main {
     private static final int TIME_STEP = 30;
     private static Timer clockTimer = null;
+    private static final int width = 20;
+    private static final int height = 20;
 
     private Main() {}
 
     public static void main(String[] args) {
-        startGame();
+         SwingUtilities.invokeLater(new Runnable() {
+             @Override
+             public void run() {
+                 System.out.println(Thread.currentThread().getName());
+                 startGame();
+             }
+         });
     }
 
     private static void startGame() {
-        int width = 20;
-        int height = 20;
         GameMapInitializer floor = new GameMapInitializer(width, height);
         UiFrame frame = new UiFrame("Le Boomberman", floor);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         floor.addFloorListener(frame.getUiComponent());
+
+        Thread repaintThread = new Thread(frame.getUiComponent());
+        repaintThread.start();
 
         Action doOneStep = new AbstractAction()
         {
@@ -47,7 +57,6 @@ public class Main {
             floor.bombCountdown();
             floor.explosionHandler();
             floor.characterInExplosion();
-            floor.notifyListeners();
         }
     }
 }
