@@ -2,6 +2,7 @@ package kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.GameStartData;
+import domain.TopicNames;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 public class KafkaConsumerGameInitializer extends BaseKafkaConsumer{
 
     public KafkaConsumerGameInitializer() {
-        super("game-initializer-topic");
+        super(TopicNames.gameInitializer);
     }
 
     public GameStartData runConsumer() {

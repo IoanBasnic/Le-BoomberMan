@@ -1,18 +1,17 @@
 package kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import domain.InputData;
+import domain.BombExplosionData;
+import domain.TopicNames;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import processing.DataProcessor;
 
-import java.io.IOException;
-
-public class KafkaConsumerInputData extends BaseKafkaConsumer {
+public class KafkaConsumerBombExplosion extends BaseKafkaConsumer {
     DataProcessor dataProcessor;
 
-    public KafkaConsumerInputData(DataProcessor dataProcessor) {
-        super("bomb-explosion-data-topic");
+    public KafkaConsumerBombExplosion(DataProcessor dataProcessor) {
+        super(TopicNames.bombExplosionData);
         this.dataProcessor = dataProcessor;
     }
 
@@ -35,8 +34,8 @@ public class KafkaConsumerInputData extends BaseKafkaConsumer {
 
             consumerRecords.forEach(record -> {
                 try {
-                    InputData data = objectMapper.readValue(record.value(), InputData.class);
-                    dataProcessor.handleInputData(data);
+                    BombExplosionData data = objectMapper.readValue(record.value(), BombExplosionData.class);
+                    dataProcessor.handleBombExplosionData(data);
 
                     System.out.print(data.playerId + " " + data.boxesDestroyed + " " + data.playerLivesTaken);
                 } catch (Exception e) {

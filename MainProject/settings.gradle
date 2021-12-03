@@ -1,2 +1,4 @@
 rootProject.name = 'MainProject'
 
+include 'shared'
+project(':shared').projectDir = file('../shared')

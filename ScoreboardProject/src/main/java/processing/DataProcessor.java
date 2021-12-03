@@ -2,10 +2,10 @@ package processing;
 
 
 import domain.GameStartData;
-import domain.InputData;
-import domain.OutputData;
+import domain.BombExplosionData;
+import domain.ProcessingResultData;
 import domain.Player;
-import kafka.KafkaProducerOutputData;
+import kafka.KafkaProducerProcessedResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,10 +13,10 @@ import java.util.List;
 
 public class DataProcessor {
     private GameStartData gameStartData;
-    private HashMap<Integer, Player> players; //map from player id to Player model
-    private KafkaProducerOutputData kafkaProducer;
+    private HashMap<Integer, Player> players; //map from player id to Player
+    private KafkaProducerProcessedResult kafkaProducer;
 
-    public DataProcessor(GameStartData data, KafkaProducerOutputData kafkaProducer){
+    public DataProcessor(GameStartData data, KafkaProducerProcessedResult kafkaProducer){
         gameStartData = data;
         this.kafkaProducer = kafkaProducer;
         players = new HashMap<Integer, Player>();
@@ -35,7 +35,7 @@ public class DataProcessor {
         }
     }
 
-    public void handleInputData(InputData data) throws Exception {
+    public void handleBombExplosionData(BombExplosionData data) throws Exception {
         Player exploderPlayer = players.get(data.playerId);
 
         //"destroy" boxes
@@ -64,7 +64,7 @@ public class DataProcessor {
         }
         players.replace(exploderPlayer.playerId, exploderPlayer);
 
-        OutputData dataToSend = new OutputData();
+        ProcessingResultData dataToSend = new ProcessingResultData();
 
         dataToSend.gameStatus = checkIfGameOver();
         dataToSend.players = new ArrayList<>(players.values());
@@ -81,10 +81,6 @@ public class DataProcessor {
             kafkaProducer.close();
             return;
         }
-    }
-
-    public void handleTimeUp(){
-        //TODO
     }
 
     private int checkIfGameOver(){

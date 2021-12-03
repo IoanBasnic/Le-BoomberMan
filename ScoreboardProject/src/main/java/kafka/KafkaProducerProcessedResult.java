@@ -1,0 +1,25 @@
+package kafka;
+
+import domain.ProcessingResultData;
+import domain.TopicNames;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
+
+public class KafkaProducerProcessedResult extends BaseKafkaProducer {
+    public void send(ProcessingResultData data) throws Exception{
+        long time = System.currentTimeMillis();
+
+        try{
+            ProducerRecord<Long, String> record = new ProducerRecord<>(TopicNames.result, time, objectMapper.writeValueAsString(data));
+            RecordMetadata metadata = producer.send(record).get();
+
+            long elapsedTime = System.currentTimeMillis() - time;
+            System.out.printf("sent record(key=%s value=%s) " +
+                            "meta(partition=%d, offset=%d) time=%d\n",
+                    record.key(), record.value(), metadata.partition(),
+                    metadata.offset(), elapsedTime);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
