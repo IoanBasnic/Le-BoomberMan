@@ -1,6 +1,7 @@
 package map_tracker;
 
 import action_and_validation_tracker.ActionTracker;
+import frontend.UI.DrawObject.DrawHearts;
 import player_and_bomb_tracker.Bomb;
 import player_and_bomb_tracker.BombExplosion;
 import frontend.UI.UiComponent;
@@ -23,7 +24,8 @@ public class GameMapInitializer {
     private Player player2 = null;
     private Player player3 = null;
     private Player player4 = null;
-    private static int index;
+    private int index;
+    private int playersAlive = 4;
 
     static ReentrantLock counterLock = new ReentrantLock(true);
 
@@ -31,6 +33,11 @@ public class GameMapInitializer {
     private Collection<Bomb> explosionList= new ArrayList<>();
     private Collection<BombExplosion> bombExplosionCoords = new ArrayList<>();
     public boolean isGameOver = false;
+
+
+    public BlockEntityEnum[][] getTiles() {
+        return tiles;
+    }
 
     public GameMapInitializer(int width, int height) {
         this.width = width;
@@ -82,10 +89,28 @@ public class GameMapInitializer {
     }
 
     public boolean getIsGameOver() {
-        return isGameOver;
+       // System.out.println("!!!!!!!!!!!!!!!!!!! " + playersAlive);
+        if(playersAlive < 3){
+            try {
+                for(int i = 0; i < 5; i++){
+                    System.out.println("UPDATE");
+                    explosionHandler();
+                    mapListenerInterfaces.UpdateMap();
+                }
+                Thread.sleep(2000);
+                return true;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+           // return true;
+        }
+        return false;
+//       return (playersAlive == 2) ? true : false;
+       // return isGameOver;
     }
 
-    public void addToBombList(Bomb bomb) {
+    public void addToBombList(Bomb bomb, Player player) {
+        player.updateNoBombs();
         bombList.add(bomb);
     }
 
@@ -94,6 +119,11 @@ public class GameMapInitializer {
         player2 = new Player(PLAYER_X_START * 12+20, PLAYER_Y_START, this,"Player2");
         player3 = new Player(PLAYER_X_START, PLAYER_Y_START * 12+20, this,"Player3");
         player4 = new Player(PLAYER_X_START * 12-20, PLAYER_Y_START * 12+20, this,"Player4");
+
+        player1.setAlive();
+        player2.setAlive();
+        player3.setAlive();
+        player4.setAlive();
 
         ActionTracker a = new ActionTracker();
         a.setKeys(uiComponent, this, player1, player2, player3, player4);
@@ -115,35 +145,6 @@ public class GameMapInitializer {
       getUi().UpdateMap();
     }
 
-
-//    public void bombCountdown(Bomb b){
-//                SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>(){
-//
-//                @Override
-//                protected Void doInBackground() throws Exception {
-//                    try {
-//                        Thread.sleep(2000);
-//                        }catch(InterruptedException e){
-//                        e.printStackTrace();
-//                    }
-//                    System.out.println(Thread.currentThread().getName());
-//                     System.out.println("Entered bombCountDown");
-//                    int time = b.getTimeToExplosion();
-//                    int i = 0;
-//                    while (i < time) {
-//                        b.setTimeToExplosion(b.getTimeToExplosion() - 1);
-//                        i++;
-//                    }
-//                    bombList.remove(b);
-//                    explosionList.add(b);
-//                    return null;
-//                }
-//
-//            };
-//            worker.execute();
-//    }
-
-
     /**
      * This method creates a bomb if the given demands are satisfied.
      */
@@ -152,46 +153,71 @@ public class GameMapInitializer {
         explosionList.clear();
         index = 0;
         for (Bomb b: bombList) {
-           // System.out.println("Entered bombCountDown");
             b.setTimeToExplosion(b.getTimeToExplosion() - 1);
-           // System.out.println("Timer: " + b.getTimeToExplosion());
             if(b.getTimeToExplosion() == 0){
+                b.getPlayer().removeBomb();
                 bombIndexesToBeRemoved.add(index);
                 explosionList.add(b);
+                //Explosion(b);
             }
             index++;
         }
         for (int i: bombIndexesToBeRemoved){bombList.remove(i);}
     }
 
-//    public static void incrementCounter(){
-//        counterLock.lock();
-//        // Always good practice to enclose locks in a try-finally block
-//        try{
-//            System.out.println(Thread.currentThread().getName() + ": " + index);
-//            index++;
-//        }finally{
-//            counterLock.unlock();
+//    public void Explosion(Bomb e) {
+//
+//            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+//                @Override
+//                protected Void doInBackground() throws Exception {
+//                   // System.out.println("Entered explosion " + Thread.currentThread().getName());
+//
+//                    int eRow = e.getRowIndex();
+//                    int eCol = e.getColIndex();
+//                    boolean northOpen = true;
+//                    boolean southOpen = true;
+//                    boolean westOpen = true;
+//                    boolean eastOpen = true;
+//                    bombExplosionCoords.add(new BombExplosion(eRow, eCol));
+//                   // System.out.println("INDEX: " + eRow + "  " + eCol);
+//                    for (int i = 1; i < e.getExplosionRadius() + 1; i++) {
+//                        if (eRow - i >= 0 && northOpen) {
+//                            northOpen = bombCoordinateCheck(eRow - i, eCol, northOpen);
+//                        }
+//                        if (eRow - i <= height && southOpen) {
+//                            southOpen = bombCoordinateCheck(eRow + i, eCol, southOpen);
+//                        }
+//                        if (eCol - i >= 0 && westOpen) {
+//                            westOpen = bombCoordinateCheck(eRow, eCol - i, westOpen);
+//                        }
+//                        if (eCol + i <= width && eastOpen) {
+//                            eastOpen = bombCoordinateCheck(eRow, eCol + i, eastOpen);
+//                        }
+//                    }
+//                    //System.out.println("FINISHED");
+//                    return null;
+//                }
+//            };
+//            worker.execute();
 //        }
-//    }
 
     public void explosionHandler(){
         Collection<BombExplosion> explosionsToBeRemoved = new ArrayList<>();
         for (BombExplosion e: bombExplosionCoords) {
-            System.out.println("Bomb tick: "+ e.getDuration());
             e.setDuration(e.getDuration()-1);
 
             if(e.getDuration()==0){
-                System.out.println("REMOVED");
                 explosionsToBeRemoved.add(e);
+                player1.setHit(false);
+                player2.setHit(false);
+                player3.setHit(false);
+                player4.setHit(false);
             }
         }
         for (BombExplosion e: explosionsToBeRemoved){
             bombExplosionCoords.remove(e);}
 
-        for (Bomb e: explosionList) {
-            System.out.println("Entered explosion ");
-
+        for(Bomb e : explosionList) {
             int eRow = e.getRowIndex();
             int eCol = e.getColIndex();
             boolean northOpen = true;
@@ -199,19 +225,18 @@ public class GameMapInitializer {
             boolean westOpen = true;
             boolean eastOpen = true;
             bombExplosionCoords.add(new BombExplosion(eRow, eCol));
-            System.out.println("INDEX: " + eRow + "  " + eCol);
-            for (int i = 1; i < e.getExplosionRadius()+1; i++) {
+            for (int i = 1; i < e.getExplosionRadius() + 1; i++) {
                 if (eRow - i >= 0 && northOpen) {
-                    northOpen = bombCoordinateCheck(eRow-i, eCol, northOpen);
+                    northOpen = bombCoordinateCheck(eRow - i, eCol, northOpen);
                 }
                 if (eRow - i <= height && southOpen) {
-                    southOpen = bombCoordinateCheck(eRow+i, eCol, southOpen);
+                    southOpen = bombCoordinateCheck(eRow + i, eCol, southOpen);
                 }
                 if (eCol - i >= 0 && westOpen) {
-                    westOpen = bombCoordinateCheck(eRow, eCol-i, westOpen);
+                    westOpen = bombCoordinateCheck(eRow, eCol - i, westOpen);
                 }
                 if (eCol + i <= width && eastOpen) {
-                    eastOpen = bombCoordinateCheck(eRow, eCol+i, eastOpen);
+                    eastOpen = bombCoordinateCheck(eRow, eCol + i, eastOpen);
                 }
             }
         }
@@ -219,21 +244,38 @@ public class GameMapInitializer {
 
     public void playerInExplosion(){
         for (BombExplosion tup: bombExplosionCoords) {
-            if(collidingCircles(player1, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
-                isGameOver = true;
+            if(!player1.hitted() && collidingCircles(player1, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
+                //System.out.println("In explosion" + " " + player1.getRowIndex() + " " + player1.getColIndex());
+                if(!player1.isInvincible()){
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    player1.setHit(true);
+                    player1.setDead();
+                    player1.setInvincible(true);
+                    player1.setX(PLAYER_X_START);
+                    player1.setY(PLAYER_Y_START);
+                    getUi().getDrawHearts().setPlayer1Hearts(player1.getNoLifes());
+                    if(!player1.IsAlive()){
+                        playersAlive--;
+                    }
+                }
+                else{
+                    System.out.println("PLAYER IS INVINCIBLE");
+                }
             }
             if(collidingCircles(player2, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
-                isGameOver = true;
             }
-            if(collidingCircles(player3, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
-                isGameOver = true;
+            if((player3.IsAlive()) && collidingCircles(player3, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
+                player3.setDead();
+                playersAlive--;
             }
             if(collidingCircles(player4, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
-                isGameOver = true;
             }
         }
     }
-
 
     public void characterInExplosion(){
         playerInExplosion();
@@ -286,13 +328,11 @@ public class GameMapInitializer {
         }
     }
 
-
     public boolean collisionWithBombs(Player player) {
         boolean playerLeftBomb = true;
 
         for (Bomb bomb : bombList) {
             if (player != null) {
-               // System.out.println(player.getName() + " " + bomb.isPlayerLeft());
                 playerLeftBomb = bomb.isPlayerLeft();
             }
             assert player != null;
@@ -302,18 +342,11 @@ public class GameMapInitializer {
                 int a2 = a * a;
                 int b2 = b * b;
                 double c = Math.sqrt(a2 + b2);
-                        System.out.println("A:" + a);
-        System.out.println("B:" + b);
-        System.out.println("A2:" + a2);
-        System.out.println("Bb:" + b2);
-        System.out.println("C:"+c);
-        System.out.println("Player size: "+ player.getSize());
                 return true;
             }
         }
         return false;
     }
-
 
     public boolean collisionWithBlock(Player player){
         //Maybe create if statements to only check nearby squares
@@ -330,7 +363,6 @@ public class GameMapInitializer {
         return false;
     }
 
-
     public boolean squareHasBomb(int rowIndex, int colIndex){
         for (Bomb b: bombList) {
             if(b.getRowIndex()==rowIndex && b.getColIndex()==colIndex){
@@ -340,32 +372,27 @@ public class GameMapInitializer {
         return false;
     }
 
-
     public void checkIfPlayerLeftBomb(Player player){
         for (Bomb bomb: bombList) {
             if(!bomb.isPlayerLeft()){
                 if(!collidingCircles(player, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
-                    System.out.println("LEFT TRUE " + player.getName());
                     bomb.setPlayerLeft(true);
                 }
                 else{
-                    System.out.println("LEFT FALSE " + player.getName());
                 }
             }
             else{
-                System.out.println("LEFT FALSE " + player.getName());
                 bomb.setPlayerLeft(false);
             }
         }
     }
 
-    public boolean bombCoordinateCheck(int eRow, int eCol, boolean open){
+    public synchronized boolean bombCoordinateCheck(int eRow, int eCol, boolean open){
         if(tiles[eRow][eCol] != BlockEntityEnum.GRASS){open = false;}
         if(tiles[eRow][eCol] == BlockEntityEnum.CRATE){
             tiles[eRow][eCol] = BlockEntityEnum.GRASS;
         }
         if(tiles[eRow][eCol] != BlockEntityEnum.WALL){
-            System.out.println("Yes" + tiles[eRow][eCol]);
             bombExplosionCoords.add(new BombExplosion(eRow, eCol));}
         return open;
     }
@@ -402,5 +429,18 @@ public class GameMapInitializer {
                 (circleDistanceY - squareSize/2)^2;
 
         return (cornerDistance <= (circleRadius^2));
+    }
+
+    public void setPlayerVincible() {
+        Player player1  = getPlayer1();
+        if(player1.isInvincible()){
+             player1.setTimeInvincible(player1.getTimeInvincible()-1);
+            System.out.println("Time: "+ player1.getTimeInvincible());
+             if(player1.getTimeInvincible() == 0){
+                 player1.setInvincible(false);
+                 player1.setTimeInvincible(150);
+                 System.out.println(player1.getName() + " " + player1.isInvincible());
+             }
+        }
     }
 }

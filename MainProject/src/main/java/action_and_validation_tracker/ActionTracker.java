@@ -33,11 +33,18 @@ public class ActionTracker {
         //gameMapInitializer.notifyListeners();
     }
 
-    public void dropBomb(int rowIndex, int colIndex, GameMapInitializer floor) {
-        System.out.println("Bomb dropped!");
-        if(!floor.squareHasBomb(rowIndex, colIndex) && floor.getBombListSize() < 3){
-            Bomb b = new Bomb(rowIndex, colIndex);
-            floor.addToBombList(b);
+    public void dropBomb(int rowIndex, int colIndex, GameMapInitializer floor, Player player) {
+//        System.out.println("Bomb dropped!");
+//        System.out.println(player.getName());
+        if(!floor.squareHasBomb(rowIndex, colIndex)){
+            if(player.getBombsPlaced() < 3){
+                Bomb b = new Bomb(rowIndex, colIndex, player);
+                floor.addToBombList(b, player);
+            }
+            else{
+                System.out.println("RUN out of bombs");
+                System.out.println("Player " + player.getName() + " " + player.getBombsPlaced());
+            }
         }
         floor.notifyListeners();
     }
