@@ -31,7 +31,7 @@ public class Main {
         floor.addFloorListener(frame.getUiComponent());
 
         //kafka stuff
-        KafkaConsumerProcessedResult processedResultProcessor = new KafkaConsumerProcessedResult(frame);
+        KafkaConsumerProcessedResult processedResultProcessor = new KafkaConsumerProcessedResult(frame, floor);
 
         Thread thread = new Thread(){
             public void run(){

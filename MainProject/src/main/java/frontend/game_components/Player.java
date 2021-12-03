@@ -57,6 +57,10 @@ public class Player extends GameObject {
         }
     }
 
+    public void kill(){
+        this.isAlive = false;
+    }
+
     public int getBombsPlaced(){
         return this.bombsPlaced;
     }

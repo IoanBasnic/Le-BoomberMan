@@ -16,8 +16,6 @@ public class DrawScoreboard {
     }
 
     public void drawScoreboard(Graphics2D g2d, GameMapInitializer gameMapInitializer, int SQUARE_SIZE) {
-        System.out.println("Player 0 has " + playersScores.get(0) + " score");
-
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
         Font font = new Font("Serif", Font.PLAIN, 60);
@@ -43,6 +41,10 @@ public class DrawScoreboard {
 
     public void setPlayersScores(ArrayList<Integer> playersScores) {
         this.playersScores = playersScores;
+    }
+
+    public ArrayList<Integer> getPlayersScores() {
+        return playersScores;
     }
 
     public void setPlayerScoreById(int playerId, int playersScore) {

@@ -16,8 +16,6 @@ public class DrawHearts {
     }
 
     public void drawHearts(Graphics2D g2d, GameMapInitializer gameMapInitializer, int SQUARE_SIZE) {
-        System.out.println("Player 0 has " + playersHearts.get(0) + " hearts");
-
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
         Font font = new Font("Serif", Font.PLAIN, 60);
@@ -49,6 +47,9 @@ public class DrawHearts {
 
     public void setPlayersHearts(ArrayList<Integer> playersHearts) {
         this.playersHearts = playersHearts;
+    }
+    public ArrayList<Integer> getPlayersHearts() {
+        return this.playersHearts;
     }
 
     public void setPlayerHeartsById(int playerId, int playersHearts) {
