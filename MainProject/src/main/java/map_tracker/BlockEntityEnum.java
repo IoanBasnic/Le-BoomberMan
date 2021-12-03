@@ -4,5 +4,6 @@ public enum BlockEntityEnum
 {
     GRASS,
     WALL,
-    CRATE
+    CRATE,
+    DEAD
 }

@@ -1,5 +1,7 @@
 package player_and_bomb_tracker;
 
+import frontend.game_components.Player;
+
 public class Bomb
 {
     // Constants are static by definition.
@@ -10,12 +12,18 @@ public class Bomb
     private final int colIndex;
     private int explosionRadius;
     private boolean playerLeft;
+    private final Player player;
 
-    public Bomb(final int rowIndex, final int colIndex) {
+    public Bomb(final int rowIndex, final int colIndex, final Player player) {
         this.rowIndex = rowIndex;
         this.colIndex = colIndex;
         this.explosionRadius = 1;
+        this.player = player;
         playerLeft = false;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
     public int getRowIndex() {

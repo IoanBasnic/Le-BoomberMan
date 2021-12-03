@@ -36,7 +36,11 @@ public class Main {
         Action doOneStep = new AbstractAction()
         {
             public void actionPerformed(ActionEvent e) {
-                tick(frame, floor);
+                try {
+                    tick(frame, floor);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
             }
         };
         clockTimer = new Timer(TIME_STEP, doOneStep);
@@ -44,19 +48,20 @@ public class Main {
         clockTimer.start();
     }
 
-    private static void gameOver(UiFrame frame, GameMapInitializer floor) {
+    private static void gameOver(UiFrame frame, GameMapInitializer floor) throws InterruptedException {
         clockTimer.stop();
         frame.dispose();
         startGame();
     }
 
-    private static void tick(UiFrame frame, GameMapInitializer floor) {
+    private static void tick(UiFrame frame, GameMapInitializer floor) throws InterruptedException {
         if (floor.getIsGameOver()) {
             gameOver(frame, floor);
         } else {
             floor.bombCountdown();
             floor.explosionHandler();
             floor.characterInExplosion();
+            floor.setPlayerVincible();
         }
     }
 }

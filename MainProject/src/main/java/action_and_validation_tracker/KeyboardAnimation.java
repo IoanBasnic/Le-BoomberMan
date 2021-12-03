@@ -119,69 +119,60 @@ public class KeyboardAnimation implements ActionListener {
     //  Invoked whenever a key is pressed or released
 
     private void handleBombEvent(String key, Player player){
-        if (player == null)
-        {
-           bomb.remove( key );
-//            System.out.println("REMOVED "+key);
-        }
+            if (player == null)
+            {
+                bomb.remove( key );
+            }
+            else
+            {
+                bomb.put(key, player);
+            }
 
-        else
-        {
-            System.out.println("ADDED "+ key);
-            bomb.put(key, player);
-        }
+            //  Start the Timer when the first key is pressed
 
-        //  Start the Timer when the first key is pressed
+            if (bomb.size() == 1) {
+                timer2.start();
+            }
 
-        if (bomb.size() == 1) {
-            timer2.start();
-        }
+            //  Stop the Timer when all keys have been released
 
-        //  Stop the Timer when all keys have been released
-
-        if (bomb.size() == 0) {
-            timer2.stop();
-        }
+            if (bomb.size() == 0) {
+                timer2.stop();
+            }
     }
 
     private void handleKeyEvent(String key, GameObject.Move moveDelta) {
         //  Keep track of which keys are pressed
-
-        if (moveDelta == null)
-        {
-            pressedKeys.remove( key );
-//            System.out.println("REMOVED "+key);
-        }
-
-        else
-        {
-//            System.out.println("ADDED "+ key);
-            pressedKeys.put(key, moveDelta);
-        }
-
-        //  Start the Timer when the first key is pressed
-
-        if (pressedKeys.size() == 1) {
-            timer.start();
-        }
-
-        //  Stop the Timer when all keys have been released
-
-        if (pressedKeys.size() == 0) {
-            timer.stop();
-        }
+            if (moveDelta == null)
+            {
+                pressedKeys.remove( key );
+            }
+            else
+            {
+                pressedKeys.put(key, moveDelta);
+            }
+            //  Start the Timer when the first key is pressed
+            if (pressedKeys.size() == 1) {
+                timer.start();
+            }
+            //  Stop the Timer when all keys have been released
+            if (pressedKeys.size() == 0) {
+                timer.stop();
+            }
     }
 
     //  Invoked when the Timer fires
 
     public void actionPerformed(ActionEvent e) {
-      //  System.out.println("ACTION FIRED");
-        moveComponent();
+        if(player.IsAlive()){
+            moveComponent();
+        }
     }
 
     public void actionPerformed2(ActionEvent e) {
-         System.out.println("DROP BOMB FIRED");
-        dropBomb();
+        if(player.IsAlive()){
+            dropBomb();
+        }
     }
 
     //  Move the component to its new location
@@ -190,11 +181,7 @@ public class KeyboardAnimation implements ActionListener {
         for (Player player : bomb.values()) {
             int row = player.getRowIndex();
             int col = player.getColIndex();
-
-            System.out.println("row " + row);
-            System.out.println("col " + col);
-
-            tracker.dropBomb(row,col,floor);
+            tracker.dropBomb(row,col,floor,player);
         }
     }
 
@@ -215,8 +202,6 @@ public class KeyboardAnimation implements ActionListener {
             deltaX += delta.getX();
             deltaY += delta.getY();
         }
-
-        //System.out.println("NEW x:" + deltaX + " NEW Y " + deltaY);
         tracker.movePlayer(move, deltaX, deltaY, this.player, this.floor);
     }
 
