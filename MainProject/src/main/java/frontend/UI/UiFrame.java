@@ -26,7 +26,7 @@ public class UiFrame extends JFrame
     }
 
     public UiComponent getUiComponent() {
-	return uiComponent;
+		return uiComponent;
     }
 }
 

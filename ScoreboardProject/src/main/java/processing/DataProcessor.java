@@ -4,7 +4,7 @@ package processing;
 import domain.GameStartData;
 import domain.BombExplosionData;
 import domain.ProcessingResultData;
-import domain.Player;
+import domain.KafkaPlayer;
 import kafka.KafkaProducerProcessedResult;
 
 import java.util.ArrayList;
@@ -13,19 +13,19 @@ import java.util.List;
 
 public class DataProcessor {
     private GameStartData gameStartData;
-    private HashMap<Integer, Player> players; //map from player id to Player
+    private HashMap<Integer, KafkaPlayer> players; //map from player id to Player
     private KafkaProducerProcessedResult kafkaProducer;
 
     public DataProcessor(GameStartData data, KafkaProducerProcessedResult kafkaProducer){
         gameStartData = data;
         this.kafkaProducer = kafkaProducer;
-        players = new HashMap<Integer, Player>();
+        players = new HashMap<Integer, KafkaPlayer>();
 
         for(int i = 0; i < data.numberOfPlayers; i++){
-            Player player = new Player();
+            KafkaPlayer player = new KafkaPlayer();
             player.playerId = i;
             player.lives = data.livesPerPlayer;
-            player.score = (float) 0;
+            player.score = 0;
 
             if(i < data.playerNames.size())
                 player.name = data.playerNames.get(i);
@@ -36,7 +36,7 @@ public class DataProcessor {
     }
 
     public void handleBombExplosionData(BombExplosionData data) throws Exception {
-        Player exploderPlayer = players.get(data.playerId);
+        KafkaPlayer exploderPlayer = players.get(data.playerId);
 
         //"destroy" boxes
         if(data.boxesDestroyed <= gameStartData.numberOfBoxes){
@@ -52,7 +52,7 @@ public class DataProcessor {
                 exploderPlayer.lives -= 1;
             }
             else {
-                Player explodedPlayer = players.get(playerId);
+                KafkaPlayer explodedPlayer = players.get(playerId);
                 if(explodedPlayer.lives > 0){
                     explodedPlayer.lives--;
 
@@ -70,7 +70,7 @@ public class DataProcessor {
         dataToSend.players = new ArrayList<>(players.values());
 
         if(dataToSend.gameStatus > 0) {
-            dataToSend.winner = new ArrayList<Player>();
+            dataToSend.winner = new ArrayList<KafkaPlayer>();
             dataToSend.winner.add(players.get(dataToSend.gameStatus - 1));
         }
 
@@ -86,9 +86,9 @@ public class DataProcessor {
     private int checkIfGameOver(){
         ArrayList<Integer> countAlivePlayers = new ArrayList<Integer>();
 
-        List<Player> playersSeq = new ArrayList<>(players.values());
+        List<KafkaPlayer> playersSeq = new ArrayList<>(players.values());
 
-        for(Player player: playersSeq){
+        for(KafkaPlayer player: playersSeq){
             if(player.lives > 0) countAlivePlayers.add(player.playerId);
         }
 

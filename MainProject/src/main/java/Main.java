@@ -1,8 +1,8 @@
 import frontend.UI.UiFrame;
+import kafka.KafkaConsumerProcessedResult;
 import map_tracker.GameMapInitializer;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class Main {
@@ -29,6 +29,17 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         floor.addFloorListener(frame.getUiComponent());
+
+        //kafka stuff
+        KafkaConsumerProcessedResult processedResultProcessor = new KafkaConsumerProcessedResult(frame);
+
+        Thread thread = new Thread(){
+            public void run(){
+                processedResultProcessor.runConsumer();
+            }
+        };
+        thread.start();
+
 
         Thread repaintThread = new Thread(frame.getUiComponent());
         repaintThread.start();

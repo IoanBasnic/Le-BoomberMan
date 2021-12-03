@@ -3,15 +3,21 @@ package frontend.UI.DrawObject;
 import map_tracker.GameMapInitializer;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class DrawScoreboard {
 
-    private String player1Score = "0";
-    private String player2Score = "0";
-    private String player3Score = "0";
-    private String player4Score = "0";
+    private ArrayList<Integer> playersScores = new ArrayList<>();
+
+    public DrawScoreboard(){
+        for(int i = 0; i < 4; i++) {
+            playersScores.add(0);
+        }
+    }
 
     public void drawScoreboard(Graphics2D g2d, GameMapInitializer gameMapInitializer, int SQUARE_SIZE) {
+        System.out.println("Player 0 has " + playersScores.get(0) + " score");
+
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
         Font font = new Font("Serif", Font.PLAIN, 60);
@@ -23,31 +29,27 @@ public class DrawScoreboard {
         g2d.setFont(font);
 
         g2d.drawString("Player 1:", gameMapInitializer.getWidth() * SQUARE_SIZE + SQUARE_SIZE, 120);
-        g2d.drawString(player1Score, gameMapInitializer.getWidth() * SQUARE_SIZE + SQUARE_SIZE*5, 120);
+        g2d.drawString(playersScores.get(0).toString(), gameMapInitializer.getWidth() * SQUARE_SIZE + SQUARE_SIZE*5, 120);
 
         g2d.drawString("Player 2:", gameMapInitializer.getWidth() * SQUARE_SIZE + SQUARE_SIZE, 160);
-        g2d.drawString(player2Score, gameMapInitializer.getWidth() * SQUARE_SIZE + SQUARE_SIZE*5, 160);
+        g2d.drawString(playersScores.get(1).toString(), gameMapInitializer.getWidth() * SQUARE_SIZE + SQUARE_SIZE*5, 160);
 
         g2d.drawString("Player 3:", gameMapInitializer.getWidth() * SQUARE_SIZE + SQUARE_SIZE, 200);
-        g2d.drawString(player3Score, gameMapInitializer.getWidth() * SQUARE_SIZE + SQUARE_SIZE*5, 200);
+        g2d.drawString(playersScores.get(2).toString(), gameMapInitializer.getWidth() * SQUARE_SIZE + SQUARE_SIZE*5, 200);
 
         g2d.drawString("Player 4:", gameMapInitializer.getWidth() * SQUARE_SIZE + SQUARE_SIZE, 240);
-        g2d.drawString(player4Score, gameMapInitializer.getWidth() * SQUARE_SIZE + SQUARE_SIZE*5, 240);
+        g2d.drawString(playersScores.get(3).toString(), gameMapInitializer.getWidth() * SQUARE_SIZE + SQUARE_SIZE*5, 240);
     }
 
-    public void setPlayer1Score(String player1Score) {
-        this.player1Score = player1Score;
+    public void setPlayersScores(ArrayList<Integer> playersScores) {
+        this.playersScores = playersScores;
     }
 
-    public void setPlayer2Score(String player2Score) {
-        this.player2Score = player2Score;
+    public void setPlayerScoreById(int playerId, int playersScore) {
+        this.playersScores.set(playerId, playersScore);
     }
 
-    public void setPlayer3Score(String player3Score) {
-        this.player3Score = player3Score;
-    }
-
-    public void setPlayer4Score(String player4Score) {
-        this.player4Score = player4Score;
+    public int getPlayerScoreById(int playerId) {
+        return this.playersScores.get(playerId);
     }
 }

@@ -257,7 +257,7 @@ public class GameMapInitializer {
                     player1.setInvincible(true);
                     player1.setX(PLAYER_X_START);
                     player1.setY(PLAYER_Y_START);
-                    getUi().getDrawHearts().setPlayer1Hearts(player1.getNoLifes());
+                    getUi().getDrawHearts().setPlayerHeartsById(0, player1.getNoLifes());
                     if(!player1.IsAlive()){
                         playersAlive--;
                     }
