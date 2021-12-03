@@ -3,19 +3,15 @@ package frontend.UI;
 import frontend.UI.DrawObject.DrawHearts;
 import frontend.UI.DrawObject.DrawObject;
 import frontend.UI.DrawObject.DrawScoreboard;
-import player_and_bomb_tracker.Bomb;
-import player_and_bomb_tracker.BombExplosion;
 import frontend.game_components.Player;
-import map_tracker.MapListenerInterface;
 import map_tracker.BlockEntityEnum;
 import map_tracker.GameMapInitializer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class UiComponent extends JComponent implements Runnable {
@@ -29,9 +25,6 @@ public class UiComponent extends JComponent implements Runnable {
 	private DrawScoreboard drawScoreboard = new DrawScoreboard();
 	private DrawHearts drawHearts = new DrawHearts();
 
-	MySeheduler scheduler;
-	Timer tmr;
-
 	public UiComponent(GameMapInitializer gameMapInitializer) {
 		this.gameMapInitializer = gameMapInitializer;
 
@@ -43,6 +36,9 @@ public class UiComponent extends JComponent implements Runnable {
 
 	public DrawHearts getDrawHearts() {
 		return this.drawHearts;
+	}
+	public DrawScoreboard getScoreboard() {
+		return this.drawScoreboard;
 	}
 
 	// This method is static since each square has the same size.
@@ -94,36 +90,39 @@ public class UiComponent extends JComponent implements Runnable {
 		}
 
 //	BlockEntityEnum[][] tiles = gameMapInitializer.getTiles();
-		Player player1 = gameMapInitializer.getPlayer1();
-		Player player3 = gameMapInitializer.getPlayer3();
 
+		ArrayList<Player> players = new ArrayList<Player>();
+		players.add(gameMapInitializer.getPlayer1());
+		players.add(gameMapInitializer.getPlayer2());
+		players.add(gameMapInitializer.getPlayer3());
+		players.add(gameMapInitializer.getPlayer4());
 
-		if (!player1.IsAlive()) {
+		if (!players.get(0).IsAlive()) {
 			//System.out.println("PLAYER IS DEAD");
 		} else {
-			if (player1.isInvincible()) {
-				if (player1.getTimeInvincible() % 5 != 0) {
+			if (players.get(0).isInvincible()) {
+				if (players.get(0).getTimeInvincible() % 5 != 0) {
 				}else {
-					drawObject.drawPlayer1(player1, g2d);
+					drawObject.drawPlayer1(players.get(0), g2d);
 				}
 			}
 			else{
-				drawObject.drawPlayer1(player1, g2d);
+				drawObject.drawPlayer1(players.get(0), g2d);
 			}
-
 		}
 
-//	drawObject.drawPlayer1(gameMapInitializer.getPlayer1(), g2d);
-		drawObject.drawPlayer2(gameMapInitializer.getPlayer2(), g2d);
 
-		if (!player3.IsAlive()) {
+//	drawObject.drawPlayer1(gameMapInitializer.getPlayer1(), g2d);
+		drawObject.drawPlayer2(players.get(1), g2d);
+
+		if (!players.get(2).IsAlive()) {
 			//System.out.println("PLAYER IS DEAD");
 		} else {
-			drawObject.drawPlayer3(player3, g2d);
+			drawObject.drawPlayer3(players.get(2), g2d);
 		}
 
 		//drawObject.drawPlayer3(gameMapInitializer.getPlayer3(), g2d);
-		drawObject.drawPlayer4(gameMapInitializer.getPlayer4(), g2d);
+		drawObject.drawPlayer4(players.get(3), g2d);
 		drawObject.drawBombs(g2d, gameMapInitializer);
 		drawObject.drawExplosion(g2d, gameMapInitializer);
 
@@ -137,21 +136,6 @@ public class UiComponent extends JComponent implements Runnable {
 		System.out.println(Thread.currentThread().getName());
 		while (true) {
 			this.repaint();
-		}
-	}
-
-	class MySeheduler extends TimerTask {
-		UiComponent cl;
-
-		public MySeheduler(UiComponent c) {
-			// TODO Auto-generated constructor stub
-			this.cl = c;
-		}
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			cl.repaint();
 		}
 	}
 }

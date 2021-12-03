@@ -2,7 +2,7 @@ package domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Player {
+public class KafkaPlayer {
     @JsonProperty("playerId")
     public Integer playerId;
 
@@ -10,7 +10,7 @@ public class Player {
     public Integer lives;
 
     @JsonProperty("score")
-    public float score;
+    public int score;
 
     @JsonProperty("name")
     public String name;

@@ -9,8 +9,8 @@ public class ProcessingResultData {
     public int gameStatus; //-1 - all players died (no winner), 0 - ongoing, playerId - player with playerId won,
 
     @JsonProperty("players")
-    public List<Player> players;
+    public List<KafkaPlayer> players;
 
     @JsonProperty("winner")
-    public List<Player> winner;
+    public List<KafkaPlayer> winner;
 }

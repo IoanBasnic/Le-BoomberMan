@@ -2,16 +2,23 @@ package kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.GameStartData;
+import domain.KafkaPlayer;
 import domain.ProcessingResultData;
 import domain.TopicNames;
+import frontend.UI.DrawObject.DrawHearts;
+import frontend.UI.DrawObject.DrawScoreboard;
+import frontend.UI.UiFrame;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 
 import java.io.IOException;
 
 public class KafkaConsumerProcessedResult extends BaseKafkaConsumer{
-    public KafkaConsumerProcessedResult() {
+    UiFrame frame;
+
+    public KafkaConsumerProcessedResult(UiFrame frame) {
         super(TopicNames.result);
+        this.frame = frame;
     }
 
     public GameStartData runConsumer() {
@@ -26,7 +33,17 @@ public class KafkaConsumerProcessedResult extends BaseKafkaConsumer{
                 try {
                     ProcessingResultData data = objectMapper.readValue(record.value(), ProcessingResultData.class);
 
-                    //TODO: do something with the result
+                    //process data
+                    DrawHearts drawHearts = frame.getUiComponent().getDrawHearts();
+                    DrawScoreboard drawScoreboard = frame.getUiComponent().getScoreboard();
+
+                    int playerCount = 0;
+                    for(KafkaPlayer player : data.players){
+                        drawHearts.setPlayerHeartsById(playerCount, player.lives);
+                        drawScoreboard.setPlayerScoreById(playerCount, player.score);
+                        playerCount++;
+                    }
+
                     System.out.print(data.gameStatus + " " + data.players + " " + data.winner);
 
                 } catch (IOException e) {
