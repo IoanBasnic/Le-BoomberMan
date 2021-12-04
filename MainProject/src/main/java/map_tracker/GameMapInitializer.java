@@ -277,6 +277,21 @@ public class GameMapInitializer {
         }
     }
 
+    public void killPlayer(int playerId){
+        if(playerId == 0){
+            player1.kill();
+        }
+        else if(playerId == 1){
+            player2.kill();
+        }
+        else if(playerId == 2){
+            player3.kill();
+        }
+        else if(playerId == 3){
+            player4.kill();
+        }
+    }
+
     public void characterInExplosion(){
         playerInExplosion();
     }
