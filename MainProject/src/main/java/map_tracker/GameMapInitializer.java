@@ -9,7 +9,6 @@ import frontend.game_components.Player;
 
 import javax.swing.*;
 import java.util.*;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 public class GameMapInitializer {
@@ -19,25 +18,21 @@ public class GameMapInitializer {
     private static int PLAYER_Y_START = 60;
     private int width;
     private int height;
-    private UiComponent mapListenerInterfaces;
+    private UiComponent mapListener;
     private Player player1 = null;
     private Player player2 = null;
     private Player player3 = null;
     private Player player4 = null;
     private int index;
     private int playersAlive = 4;
-
-    static ReentrantLock counterLock = new ReentrantLock(true);
+    private boolean exploded = false;
+    private int cratesExploded = 0;
 
     private List<Bomb> bombList= new ArrayList<>();
     private Collection<Bomb> explosionList= new ArrayList<>();
     private Collection<BombExplosion> bombExplosionCoords = new ArrayList<>();
-    public boolean isGameOver = false;
-
-
-    public BlockEntityEnum[][] getTiles() {
-        return tiles;
-    }
+    private List<Player> exp = new ArrayList<>();
+    private List<Player> playersList = new ArrayList<>();
 
     public GameMapInitializer(int width, int height) {
         this.width = width;
@@ -58,7 +53,6 @@ public class GameMapInitializer {
     public int getWidth() {
         return width;
     }
-
     public int getHeight() {
         return height;
     }
@@ -89,24 +83,19 @@ public class GameMapInitializer {
     }
 
     public boolean getIsGameOver() {
-       // System.out.println("!!!!!!!!!!!!!!!!!!! " + playersAlive);
         if(playersAlive < 3){
             try {
                 for(int i = 0; i < 5; i++){
-                    System.out.println("UPDATE");
                     explosionHandler();
-                    mapListenerInterfaces.UpdateMap();
+                    mapListener.UpdateMap();
                 }
                 Thread.sleep(2000);
                 return true;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-           // return true;
         }
         return false;
-//       return (playersAlive == 2) ? true : false;
-       // return isGameOver;
     }
 
     public void addToBombList(Bomb bomb, Player player) {
@@ -120,10 +109,14 @@ public class GameMapInitializer {
         player3 = new Player(PLAYER_X_START, PLAYER_Y_START * 12+20, this,"Player3");
         player4 = new Player(PLAYER_X_START * 12-20, PLAYER_Y_START * 12+20, this,"Player4");
 
-        player1.setAlive();
-        player2.setAlive();
-        player3.setAlive();
-        player4.setAlive();
+        playersList.add(player1);
+        playersList.add(player2);
+        playersList.add(player3);
+        playersList.add(player4);
+
+        for(Player player : playersList){
+            player.setAlive();
+        }
 
         ActionTracker a = new ActionTracker();
         a.setKeys(uiComponent, this, player1, player2, player3, player4);
@@ -134,87 +127,65 @@ public class GameMapInitializer {
     }
 
     public void addFloorListener(UiComponent bl) {
-        mapListenerInterfaces = bl;
+        mapListener = bl;
     }
 
     public UiComponent getUi(){
-        return mapListenerInterfaces;
+        return mapListener;
     }
 
     public void notifyListeners() {
-      getUi().UpdateMap();
+        getUi().UpdateMap();
     }
 
     /**
      * This method creates a bomb if the given demands are satisfied.
      */
-    public void bombCountdown(){
+    public void bombCountdown() {
         Collection<Integer> bombIndexesToBeRemoved = new ArrayList<>();
         explosionList.clear();
         index = 0;
-        for (Bomb b: bombList) {
+        for (Bomb b : bombList) {
             b.setTimeToExplosion(b.getTimeToExplosion() - 1);
-            if(b.getTimeToExplosion() == 0){
+            //System.out.println("Bomb: " + b.getPlayer().getName() + "  " + b.getTimeToExplosion());
+            if (b.getTimeToExplosion() == 0) {
                 b.getPlayer().removeBomb();
                 bombIndexesToBeRemoved.add(index);
+                //System.out.println("INDEX " + index + " Bomb: " + b.getPlayer().getName());
                 explosionList.add(b);
                 //Explosion(b);
             }
             index++;
         }
-        for (int i: bombIndexesToBeRemoved){bombList.remove(i);}
+        for (int i : bombIndexesToBeRemoved) {
+            try {
+                bombList.remove(i);
+            } catch (IndexOutOfBoundsException e) {
+                bombList.remove(i-1);
+                System.out.println("CATCHED " + i);
+                System.out.println("SIZE " + bombIndexesToBeRemoved.size());
+            }
+        }
     }
-
-//    public void Explosion(Bomb e) {
-//
-//            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-//                @Override
-//                protected Void doInBackground() throws Exception {
-//                   // System.out.println("Entered explosion " + Thread.currentThread().getName());
-//
-//                    int eRow = e.getRowIndex();
-//                    int eCol = e.getColIndex();
-//                    boolean northOpen = true;
-//                    boolean southOpen = true;
-//                    boolean westOpen = true;
-//                    boolean eastOpen = true;
-//                    bombExplosionCoords.add(new BombExplosion(eRow, eCol));
-//                   // System.out.println("INDEX: " + eRow + "  " + eCol);
-//                    for (int i = 1; i < e.getExplosionRadius() + 1; i++) {
-//                        if (eRow - i >= 0 && northOpen) {
-//                            northOpen = bombCoordinateCheck(eRow - i, eCol, northOpen);
-//                        }
-//                        if (eRow - i <= height && southOpen) {
-//                            southOpen = bombCoordinateCheck(eRow + i, eCol, southOpen);
-//                        }
-//                        if (eCol - i >= 0 && westOpen) {
-//                            westOpen = bombCoordinateCheck(eRow, eCol - i, westOpen);
-//                        }
-//                        if (eCol + i <= width && eastOpen) {
-//                            eastOpen = bombCoordinateCheck(eRow, eCol + i, eastOpen);
-//                        }
-//                    }
-//                    //System.out.println("FINISHED");
-//                    return null;
-//                }
-//            };
-//            worker.execute();
-//        }
 
     public void explosionHandler(){
         Collection<BombExplosion> explosionsToBeRemoved = new ArrayList<>();
-        for (BombExplosion e: bombExplosionCoords) {
-            e.setDuration(e.getDuration()-1);
 
+        for (BombExplosion e: bombExplosionCoords) {
+            if(e.getDuration() == 4){
+                exploded = true;
+            }
+
+            e.setDuration(e.getDuration()-1);
             if(e.getDuration()==0){
                 explosionsToBeRemoved.add(e);
-                player1.setHit(false);
-                player2.setHit(false);
-                player3.setHit(false);
-                player4.setHit(false);
+                for(Player player : playersList){
+                    player.setHit(false);
+                }
             }
         }
         for (BombExplosion e: explosionsToBeRemoved){
+            exploded = false;
             bombExplosionCoords.remove(e);}
 
         for(Bomb e : explosionList) {
@@ -224,56 +195,33 @@ public class GameMapInitializer {
             boolean southOpen = true;
             boolean westOpen = true;
             boolean eastOpen = true;
-            bombExplosionCoords.add(new BombExplosion(eRow, eCol));
+            bombExplosionCoords.add(new BombExplosion(eRow, eCol, e));
             for (int i = 1; i < e.getExplosionRadius() + 1; i++) {
                 if (eRow - i >= 0 && northOpen) {
-                    northOpen = bombCoordinateCheck(eRow - i, eCol, northOpen);
+                    northOpen = bombCoordinateCheck(eRow - i, eCol, northOpen, e);
                 }
                 if (eRow - i <= height && southOpen) {
-                    southOpen = bombCoordinateCheck(eRow + i, eCol, southOpen);
+                    southOpen = bombCoordinateCheck(eRow + i, eCol, southOpen, e);
                 }
                 if (eCol - i >= 0 && westOpen) {
-                    westOpen = bombCoordinateCheck(eRow, eCol - i, westOpen);
+                    westOpen = bombCoordinateCheck(eRow, eCol - i, westOpen, e);
                 }
                 if (eCol + i <= width && eastOpen) {
-                    eastOpen = bombCoordinateCheck(eRow, eCol + i, eastOpen);
+                    eastOpen = bombCoordinateCheck(eRow, eCol + i, eastOpen, e);
                 }
             }
         }
     }
 
-    public void playerInExplosion(){
-        for (BombExplosion tup: bombExplosionCoords) {
-            if(!player1.hitted() && collidingCircles(player1, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
-                //System.out.println("In explosion" + " " + player1.getRowIndex() + " " + player1.getColIndex());
-                if(!player1.isInvincible()){
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    player1.setHit(true);
-                    player1.setDead();
-                    player1.setInvincible(true);
-                    player1.setX(PLAYER_X_START);
-                    player1.setY(PLAYER_Y_START);
-                    getUi().getDrawHearts().setPlayerHeartsById(0, player1.getNoLifes());
-                    if(!player1.IsAlive()){
-                        playersAlive--;
-                    }
-                }
-                else{
-                    System.out.println("PLAYER IS INVINCIBLE");
-                }
-            }
-            if(collidingCircles(player2, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
-            }
-            if((player3.IsAlive()) && collidingCircles(player3, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
-                player3.setDead();
-                playersAlive--;
-            }
-            if(collidingCircles(player4, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
-            }
+    public void playerHit(Player player, int PLAYER_X_START2, int PLAYER_Y_START2, int playerId){
+        player.setHit(true);
+        player.setDead();
+        player.setInvincible(true);
+        player.setX(PLAYER_X_START2);
+        player.setY(PLAYER_Y_START2);
+        mapListener.getDrawHearts().setPlayerHeartsById(player.getNoLifes(), playerId);
+        if(!player.IsAlive()){
+            playersAlive--;
         }
     }
 
@@ -292,8 +240,82 @@ public class GameMapInitializer {
         }
     }
 
-    public void characterInExplosion(){
-        playerInExplosion();
+    public void playerInExplosion(){
+        for (BombExplosion tup: bombExplosionCoords) {
+            if(player1.IsAlive() && !player1.isHit() && collidingCircles(player1, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
+                if(!player1.isInvincible()){
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    playerHit(player1, PLAYER_X_START, PLAYER_Y_START, 1);
+
+                    if(exploded == false){
+                        exp.add(tup.getBomb().getPlayer());
+                        System.out.println("PLAYER 1 was killed by " + tup.getBomb().getPlayer().getName());
+                    }
+                }
+                else{
+                    System.out.println("PLAYER 1 IS INVINCIBLE");
+                }
+            }// PLAYER 1 END
+            if(player2.IsAlive() && !player2.isHit() && collidingCircles(player2, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
+                if(!player2.isInvincible()){
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    playerHit(player2, PLAYER_X_START * 12+20, PLAYER_Y_START, 2);
+
+                    if(exploded == false){
+                        exp.add(tup.getBomb().getPlayer());
+                        System.out.println("PLAYER 2 was killed by " + tup.getBomb().getPlayer().getName());
+                    }
+                }
+                else{
+                    System.out.println("PLAYER 2 IS INVINCIBLE");
+                }
+            }// PLAYER 2 END
+            if(player3.IsAlive() && !player3.isHit() && collidingCircles( player3, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()) )) {
+                if (!player3.isInvincible()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    playerHit(player3, PLAYER_X_START, PLAYER_Y_START * 12 + 20, 3);
+
+                    if (exploded == false) {
+                        exp.add(tup.getBomb().getPlayer());
+                        System.out.println("PLAYER 3 was killed by " + tup.getBomb().getPlayer().getName());
+                    }
+                } else {
+                    System.out.println("PLAYER 3 IS INVINCIBLE");
+                }
+            }// PLAYER 3 END
+            if(player4.IsAlive() && !player4.isHit() && collidingCircles(player4, squareToPixel(tup.getColIndex()), squareToPixel(tup.getRowIndex()))){
+                if(!player4.isInvincible()){
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    playerHit(player4, PLAYER_X_START * 12-20, PLAYER_Y_START * 12+20, 4);
+
+                    if(exploded == false){
+                        exp.add(tup.getBomb().getPlayer());
+                        System.out.println("PLAYER 4 was killed by " + tup.getBomb().getPlayer().getName());
+                    }
+                }
+                else{
+                    System.out.println("PLAYER 4 IS INVINCIBLE");
+                }
+            }
+        }
     }
 
     private void placeBreakable () {
@@ -352,11 +374,6 @@ public class GameMapInitializer {
             }
             assert player != null;
             if(playerLeftBomb && collidingCircles(player, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
-                int a = player.getX() - squareToPixel(bomb.getColIndex()) - UiComponent.getSquareMiddle();
-                int b = player.getY() - squareToPixel(bomb.getRowIndex()) - UiComponent.getSquareMiddle();
-                int a2 = a * a;
-                int b2 = b * b;
-                double c = Math.sqrt(a2 + b2);
                 return true;
             }
         }
@@ -402,13 +419,18 @@ public class GameMapInitializer {
         }
     }
 
-    public synchronized boolean bombCoordinateCheck(int eRow, int eCol, boolean open){
+    public synchronized boolean bombCoordinateCheck(int eRow, int eCol, boolean open, Bomb bomb){
         if(tiles[eRow][eCol] != BlockEntityEnum.GRASS){open = false;}
         if(tiles[eRow][eCol] == BlockEntityEnum.CRATE){
+            cratesExploded++;
+            Player player = bomb.getPlayer();
+            System.out.println("CRATES EXPLODED: "+ cratesExploded);
+            player.updateCratesDestroyed();
+            System.out.println(player.getName() + " destroyed " + player.getCratesDestroyed());
             tiles[eRow][eCol] = BlockEntityEnum.GRASS;
         }
         if(tiles[eRow][eCol] != BlockEntityEnum.WALL){
-            bombExplosionCoords.add(new BombExplosion(eRow, eCol));}
+            bombExplosionCoords.add(new BombExplosion(eRow, eCol, bomb));}
         return open;
     }
 
@@ -446,16 +468,17 @@ public class GameMapInitializer {
         return (cornerDistance <= (circleRadius^2));
     }
 
-    public void setPlayerVincible() {
-        Player player1  = getPlayer1();
-        if(player1.isInvincible()){
-             player1.setTimeInvincible(player1.getTimeInvincible()-1);
-            System.out.println("Time: "+ player1.getTimeInvincible());
-             if(player1.getTimeInvincible() == 0){
-                 player1.setInvincible(false);
-                 player1.setTimeInvincible(150);
-                 System.out.println(player1.getName() + " " + player1.isInvincible());
-             }
-        }
+    public void setPlayersVulnerable() {
+        for(Player player : playersList){
+            if(player.isInvincible()){
+                player.setTimeInvincible(player.getTimeInvincible()-1);
+                if(player.getTimeInvincible() == 0){
+                    player.setInvincible(false);
+                    player.setTimeInvincible(150);
+                }
+            }
+        }//end for
     }
+
+
 }

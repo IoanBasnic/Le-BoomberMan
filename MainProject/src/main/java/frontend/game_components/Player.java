@@ -1,31 +1,29 @@
 package frontend.game_components;
 
-import action_and_validation_tracker.ActionTracker;
-import frontend.UI.UiComponent;
 import map_tracker.GameMapInitializer;
-import org.w3c.dom.ls.LSOutput;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 public class Player extends GameObject {
 
     private final static int PLAYER_PIXELS_BY_STEP = 4;
     private boolean isAlive;
     private GameMapInitializer floor;
-    private ActionTracker actionTracker = new ActionTracker();
     private String name;
     private int bombsPlaced = 0;
     private int noLifes;
     private boolean hit = false;
     private boolean invincible;
     private int timeInvincible = 150;
+    private int cratesDestroyed = 0;
 
     public void setHit(boolean hit){
         this.hit = hit;
     }
-    public boolean hitted(){
+    public boolean isHit(){
         return hit;
+    }
+
+    public void kill(){
+        this.isAlive = false;
     }
 
     public int getNoLifes(){
@@ -49,16 +47,19 @@ public class Player extends GameObject {
     public void setInvincible(boolean invincible){this.invincible = invincible;}
     public boolean isInvincible() {return invincible;}
 
+    public void updateCratesDestroyed(){
+        cratesDestroyed++;
+    }
+    public int getCratesDestroyed(){
+        return cratesDestroyed;
+    }
+
     public void setDead(){
         noLifes--;
         System.out.println("Lifes " + noLifes);
         if(noLifes < 1){
             this.isAlive = false;
         }
-    }
-
-    public void kill(){
-        this.isAlive = false;
     }
 
     public int getBombsPlaced(){
