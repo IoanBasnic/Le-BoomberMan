@@ -30,7 +30,10 @@ public class ActionTracker {
         if(!floor.squareHasBomb(rowIndex, colIndex)){
             if(player.getBombsPlaced() < 3){
                 Bomb b = new Bomb(rowIndex, colIndex, player);
-                floor.addToBombList(b, player);
+
+                //TODO: clean up one flow
+                floor.createBombThread(b, player);
+//                floor.addToBombList(b, player);
             }
             else{
                 System.out.println("RUN out of bombs");
