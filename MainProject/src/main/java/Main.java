@@ -71,8 +71,8 @@ public class Main {
         } else {
             floor.bombCountdown();
             floor.explosionHandler();
-            floor.characterInExplosion();
-            floor.setPlayerVincible();
+            floor.playerInExplosion();
+            floor.setPlayersVulnerable();
         }
     }
 }

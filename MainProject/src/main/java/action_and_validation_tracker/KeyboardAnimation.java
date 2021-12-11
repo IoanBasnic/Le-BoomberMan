@@ -44,7 +44,7 @@ public class KeyboardAnimation implements ActionListener {
      */
 
     public void addBombAction(String keyStroke, Player player){
-        System.out.println("REACHED!");
+
 
         int offset = keyStroke.lastIndexOf(" ");
         String key = offset == -1 ? keyStroke : keyStroke.substring(offset + 1);
@@ -60,8 +60,7 @@ public class KeyboardAnimation implements ActionListener {
         actionMap.put(pressedKey, pressedAction);
 
         Object actionName = inputMap.get(pressedKeyStroke);
-        System.out.println("\tKey: <" + key + ">, action name: "
-                + actionName);
+
 
         Action releasedAction = new BombAction(key, null);
         String releasedKey = modifiers + RELEASED + key;
@@ -69,14 +68,13 @@ public class KeyboardAnimation implements ActionListener {
         inputMap.put(releasedKeyStroke, releasedKey);
         actionMap.put(releasedKey, releasedAction);
 
-        System.out.println("FINISHED");
+
 
     }
 
     public void addAction(String keyStroke, GameObject.Move move) {
         //  Separate the key identifier from the modifiers of the KeyStroke
 
-        System.out.println("REACHED!");
 
         int offset = keyStroke.lastIndexOf(" ");
         String key = offset == -1 ? keyStroke : keyStroke.substring(offset + 1);
@@ -91,19 +89,13 @@ public class KeyboardAnimation implements ActionListener {
 
         //  Create Action and add binding for the pressed key
 //        Point point  = new Point(move.getX(), move.getY());
-       // System.out.println("POINT: " + move.getX() + "  " + move.getY());
+        // System.out.println("POINT: " + move.getX() + "  " + move.getY());
 
         Action pressedAction = new AnimationAction(key, move);
         String pressedKey = modifiers + PRESSED + key;
         KeyStroke pressedKeyStroke = KeyStroke.getKeyStroke(pressedKey);
         inputMap.put(pressedKeyStroke, pressedKey);
         actionMap.put(pressedKey, pressedAction);
-
-
-        Object actionName = inputMap.get(pressedKeyStroke);
-        System.out.println("\tKey: <" + key + ">, action name: "
-                + actionName);
-
 
         //  Create Action and add binding for the released key
 
@@ -113,52 +105,51 @@ public class KeyboardAnimation implements ActionListener {
         inputMap.put(releasedKeyStroke, releasedKey);
         actionMap.put(releasedKey, releasedAction);
 
-        System.out.println("FINISHED");
     }
 
     //  Invoked whenever a key is pressed or released
 
     private void handleBombEvent(String key, Player player){
-            if (player == null)
-            {
-                bomb.remove( key );
-            }
-            else
-            {
-                bomb.put(key, player);
-            }
+        if (player == null)
+        {
+            bomb.remove( key );
+        }
+        else
+        {
+            bomb.put(key, player);
+        }
 
-            //  Start the Timer when the first key is pressed
+        //  Start the Timer when the first key is pressed
 
-            if (bomb.size() == 1) {
-                timer2.start();
-            }
+        if (bomb.size() == 1) {
+            timer2.start();
+        }
 
-            //  Stop the Timer when all keys have been released
+        //  Stop the Timer when all keys have been released
 
-            if (bomb.size() == 0) {
-                timer2.stop();
-            }
+        if (bomb.size() == 0) {
+            timer2.stop();
+        }
     }
 
     private void handleKeyEvent(String key, GameObject.Move moveDelta) {
         //  Keep track of which keys are pressed
-            if (moveDelta == null)
-            {
-                pressedKeys.remove( key );
-            }
-            else
-            {
-                pressedKeys.put(key, moveDelta);
-            }
-            //  Start the Timer when the first key is pressed
-            if (pressedKeys.size() == 1) {
-                timer.start();
-            }
-            //  Stop the Timer when all keys have been released
-            if (pressedKeys.size() == 0) {
-                timer.stop();
-            }
+        if (moveDelta == null)
+        {
+            pressedKeys.remove( key );
+        }
+        else
+        {
+            pressedKeys.put(key, moveDelta);
+        }
+        //  Start the Timer when the first key is pressed
+        if (pressedKeys.size() == 1) {
+            timer.start();
+        }
+        //  Stop the Timer when all keys have been released
+        if (pressedKeys.size() == 0) {
+            timer.stop();
+        }
     }
 
     //  Invoked when the Timer fires
