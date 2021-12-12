@@ -140,7 +140,6 @@ public class GameMapInitializer {
 
         int eRow = bomb.getRowIndex();
         int eCol = bomb.getColIndex();
-//        playerInExplosion(bomb);
 
         //crate explosion handling
         boolean northOpen = true;
@@ -300,7 +299,7 @@ public class GameMapInitializer {
             @Override
             public void run() {
                 try {
-                    TimeUnit.SECONDS.sleep(1);
+                    TimeUnit.SECONDS.sleep(2);
 
                     player.setInvincible(false);
                     player.setHit(false);
