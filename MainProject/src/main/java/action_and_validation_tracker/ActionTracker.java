@@ -66,6 +66,13 @@ public class ActionTracker {
         animation3.addAction("J",  GameObject.Move.DOWN);
         animation3.addBombAction("M", player2);
 
+        KeyboardAnimation animation4 = new KeyboardAnimation(uiComponent, player4, 24, floor, this);
+        animation4.addAction("6", GameObject.Move.RIGHT);
+        animation4.addAction("4", GameObject.Move.LEFT);
+        animation4.addAction("8",    GameObject.Move.UP);
+        animation4.addAction("5",  GameObject.Move.DOWN);
+        animation4.addBombAction("2", player4);
+
 //        uiComponent.getInputMap().put(KeyStroke.getKeyStroke('8'), "moveRight4");
 //        uiComponent.getInputMap().put(KeyStroke.getKeyStroke('4'), "moveLeft4");
 //        uiComponent.getInputMap().put(KeyStroke.getKeyStroke('8'), "moveUp4");

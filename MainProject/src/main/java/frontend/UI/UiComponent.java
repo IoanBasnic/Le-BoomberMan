@@ -98,7 +98,7 @@ public class UiComponent extends JComponent implements Runnable {
 		players.add(gameMapInitializer.getPlayer4());
 
 		if (!players.get(0).IsAlive()) {
-			//System.out.println("PLAYER IS DEAD");
+			System.out.println("PLAYER IS DEAD");
 		} else {
 			if (players.get(0).isInvincible()) {
 				if (players.get(0).getTimeInvincible() % 5 != 0) {

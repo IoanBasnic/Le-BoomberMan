@@ -102,12 +102,14 @@ public class GameMapInitializer {
 
     public void createBombThread(Bomb bomb, Player player) {
         bombList.add(bomb);
+        player.updateNoBombs();
 
         Thread bombThread = new Thread(){
             @Override
             public void run() {
                 try {
                     waitForBombToExplode(bomb);
+                    player.removeBomb();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -138,7 +140,6 @@ public class GameMapInitializer {
 
         int eRow = bomb.getRowIndex();
         int eCol = bomb.getColIndex();
-        playerInExplosion(bomb);
 
         //crate explosion handling
         boolean northOpen = true;
@@ -149,6 +150,7 @@ public class GameMapInitializer {
         for (int i = 1; i < bomb.getExplosionRadius() + 1; i++) {
             if (eRow - i >= 0 && northOpen) {
                 northOpen = bombCoordinateCheck(eRow - i, eCol, northOpen, bomb);
+
             }
             if (eRow - i <= height && southOpen) {
                 southOpen = bombCoordinateCheck(eRow + i, eCol, southOpen, bomb);
@@ -161,6 +163,7 @@ public class GameMapInitializer {
             }
         }
 
+        playerInExplosion(bomb);
         List<BombExplosion> bombExplosionsToBeRemoved = new ArrayList<>();
         for(int i = bombExplosionCoords.size() - 1; i >= 0; i--){
             bombExplosionsToBeRemoved.add(bombExplosionCoords.get(i));
@@ -296,7 +299,7 @@ public class GameMapInitializer {
             @Override
             public void run() {
                 try {
-                    TimeUnit.SECONDS.sleep(1);
+                    TimeUnit.SECONDS.sleep(2);
 
                     player.setInvincible(false);
                     player.setHit(false);
@@ -324,57 +327,57 @@ public class GameMapInitializer {
     }
 
     public void playerInExplosion(Bomb bomb){
-        if(player1.IsAlive() && collidingCircles(player1, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
-            if(!player1.isInvincible()){
-                playerHit(player1, PLAYER_X_START, PLAYER_Y_START, 1);
+        for (BombExplosion bomb_exp : getBombExplosionCoords()) {
+            if (player1.IsAlive() && collidingCircles(player1, squareToPixel(bomb_exp.getColIndex()), squareToPixel(bomb_exp.getRowIndex()))) {
+                if (!player1.isInvincible()) {
+                    playerHit(player1, PLAYER_X_START, PLAYER_Y_START, 1);
 
-                if(!exploded){
-                    exp.add(bomb.getPlayer());
-                    System.out.println("PLAYER 1 was killed by " + bomb.getPlayer().getName());
+                    if (!exploded) {
+                        exp.add(bomb.getPlayer());
+                        System.out.println("PLAYER 1 was killed by " + bomb.getPlayer().getName());
+                    }
+                } else {
+                    // will be activated when a player dies but still in radius of bomb
+                    System.out.println("PLAYER 1 IS INVINCIBLE");
                 }
-            }
-            else{
-                System.out.println("PLAYER 1 IS INVINCIBLE");
-            }
-        }// PLAYER 1 END
-        if(player2.IsAlive() && collidingCircles(player2, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
-            if(!player2.isInvincible()){
+            }// PLAYER 1 END
+            if (player2.IsAlive() && collidingCircles(player2, squareToPixel(bomb_exp.getColIndex()), squareToPixel(bomb_exp.getRowIndex()))) {
+                if (!player2.isInvincible()) {
 
-                playerHit(player2, PLAYER_X_START * 12+20, PLAYER_Y_START, 2);
+                    playerHit(player2, PLAYER_X_START * 12 + 20, PLAYER_Y_START, 2);
 
-                if(!exploded){
-                    exp.add(bomb.getPlayer());
-                    System.out.println("PLAYER 2 was killed by " + bomb.getPlayer().getName());
+                    if (!exploded) {
+                        exp.add(bomb.getPlayer());
+                        System.out.println("PLAYER 2 was killed by " + bomb.getPlayer().getName());
+                    }
+                } else {
+                    System.out.println("PLAYER 2 IS INVINCIBLE");
                 }
-            }
-            else{
-                System.out.println("PLAYER 2 IS INVINCIBLE");
-            }
-        }// PLAYER 2 END
-        if(player3.IsAlive() && collidingCircles( player3, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()) )) {
-            if (!player3.isInvincible()) {
+            }// PLAYER 2 END
+            if (player3.IsAlive() && collidingCircles(player3, squareToPixel(bomb_exp.getColIndex()), squareToPixel(bomb_exp.getRowIndex()))) {
+                if (!player3.isInvincible()) {
 
-                playerHit(player3, PLAYER_X_START, PLAYER_Y_START * 12 + 20, 3);
+                    playerHit(player3, PLAYER_X_START, PLAYER_Y_START * 12 + 20, 3);
 
-                if (!exploded) {
-                    exp.add(bomb.getPlayer());
-                    System.out.println("PLAYER 3 was killed by " + bomb.getPlayer().getName());
+                    if (!exploded) {
+                        exp.add(bomb.getPlayer());
+                        System.out.println("PLAYER 3 was killed by " + bomb.getPlayer().getName());
+                    }
+                } else {
+                    System.out.println("PLAYER 3 IS INVINCIBLE");
                 }
-            } else {
-                System.out.println("PLAYER 3 IS INVINCIBLE");
-            }
-        }// PLAYER 3 END
-        if(player4.IsAlive() && collidingCircles(player4, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
-            if(!player4.isInvincible()){
-                playerHit(player4, PLAYER_X_START * 12-20, PLAYER_Y_START * 12+20, 4);
+            }// PLAYER 3 END
+            if (player4.IsAlive() && collidingCircles(player4, squareToPixel(bomb_exp.getColIndex()), squareToPixel(bomb_exp.getRowIndex()))) {
+                if (!player4.isInvincible()) {
+                    playerHit(player4, PLAYER_X_START * 12 - 20, PLAYER_Y_START * 12 + 20, 4);
 
-                if(!exploded){
-                    exp.add(bomb.getPlayer());
-                    System.out.println("PLAYER 4 was killed by " + bomb.getPlayer().getName());
+                    if (!exploded) {
+                        exp.add(bomb.getPlayer());
+                        System.out.println("PLAYER 4 was killed by " + bomb.getPlayer().getName());
+                    }
+                } else {
+                    System.out.println("PLAYER 4 IS INVINCIBLE");
                 }
-            }
-            else{
-                System.out.println("PLAYER 4 IS INVINCIBLE");
             }
         }
     }
