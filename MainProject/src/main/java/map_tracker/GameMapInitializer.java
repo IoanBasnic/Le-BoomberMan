@@ -102,12 +102,14 @@ public class GameMapInitializer {
 
     public void createBombThread(Bomb bomb, Player player) {
         bombList.add(bomb);
+        player.updateNoBombs();
 
         Thread bombThread = new Thread(){
             @Override
             public void run() {
                 try {
                     waitForBombToExplode(bomb);
+                    player.removeBomb();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
