@@ -1,5 +1,6 @@
 import domain.GameStartData;
 import frontend.UI.UiFrame;
+import frontend.UI.UiGameOverFrame;
 import kafka.KafkaConsumerProcessedResult;
 import kafka.KafkaProducerBombExplosion;
 import kafka.KafkaProducerGameInitializer;
@@ -62,9 +63,13 @@ public class Main {
     }
 
     private static void gameOver(UiFrame frame, GameMapInitializer floor) throws InterruptedException {
-        clockTimer.stop();
         frame.dispose();
-        startGame();
+        UiGameOverFrame game_over_frame = new UiGameOverFrame("GAME OVER");
+        game_over_frame.repaint();
+        clockTimer.stop();
+
+//        frame.dispose();
+//        startGame();
     }
 
     private static void tick(UiFrame frame, GameMapInitializer floor) throws InterruptedException {
