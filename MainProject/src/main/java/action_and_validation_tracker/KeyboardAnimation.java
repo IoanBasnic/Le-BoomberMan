@@ -44,8 +44,6 @@ public class KeyboardAnimation implements ActionListener {
      */
 
     public void addBombAction(String keyStroke, Player player){
-
-
         int offset = keyStroke.lastIndexOf(" ");
         String key = offset == -1 ? keyStroke : keyStroke.substring(offset + 1);
         String modifiers = keyStroke.replace(key, "");
@@ -67,8 +65,6 @@ public class KeyboardAnimation implements ActionListener {
         KeyStroke releasedKeyStroke = KeyStroke.getKeyStroke(releasedKey);
         inputMap.put(releasedKeyStroke, releasedKey);
         actionMap.put(releasedKey, releasedAction);
-
-
 
     }
 
@@ -127,9 +123,9 @@ public class KeyboardAnimation implements ActionListener {
 
         //  Stop the Timer when all keys have been released
 
-        if (bomb.size() == 0) {
-            timer2.stop();
-        }
+//        if (bomb.size() == 0) {
+//            timer2.stop();
+//        }
     }
 
     private void handleKeyEvent(String key, GameObject.Move moveDelta) {
@@ -163,6 +159,7 @@ public class KeyboardAnimation implements ActionListener {
     public void actionPerformed2(ActionEvent e) {
         if(player.IsAlive()){
             dropBomb();
+            timer2.stop();
         }
     }
 

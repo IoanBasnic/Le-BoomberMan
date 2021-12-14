@@ -32,7 +32,6 @@ public class Main {
 
         //kafka stuff
         KafkaConsumerProcessedResult processedResultProcessor = new KafkaConsumerProcessedResult(frame, floor);
-
         Thread thread = new Thread(){
             public void run(){
                 processedResultProcessor.runConsumer();
@@ -40,12 +39,7 @@ public class Main {
         };
         thread.start();
 
-
-        Thread repaintThread = new Thread(frame.getUiComponent());
-        repaintThread.start();
-
-        Action doOneStep = new AbstractAction()
-        {
+        Action doOneStep = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
                 try {
                     tick(frame, floor);
@@ -68,11 +62,14 @@ public class Main {
     private static void tick(UiFrame frame, GameMapInitializer floor) throws InterruptedException {
         if (floor.getIsGameOver()) {
             gameOver(frame, floor);
-        } else {
-            floor.bombCountdown();
-            floor.explosionHandler();
-            floor.playerInExplosion();
-            floor.setPlayersVulnerable();
         }
+        else {
+            frame.getUiComponent().repaint();
+        }
+//            floor.bombCountdown();
+//            floor.explosionHandler();
+//            floor.playerInExplosion();
+//            floor.setPlayersVulnerable();
+//        }
     }
 }

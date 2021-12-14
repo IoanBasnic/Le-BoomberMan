@@ -53,10 +53,10 @@ public class DrawHearts {
     }
 
     public void setPlayerHeartsById(int playerId, int playersHearts) {
-        this.playersHearts.set(playerId, playersHearts);
+        this.playersHearts.set(playerId - 1, playersHearts);
     }
 
-    public int getPlayerHeartsById(int playerId, int playersHearts) {
+    public int getPlayerHeartsById(int playerId) {
         return this.playersHearts.get(playerId);
     }
 }
