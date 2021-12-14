@@ -1,7 +1,9 @@
 package map_tracker;
 
 import action_and_validation_tracker.ActionTracker;
+import domain.BombExplosionData;
 import frontend.UI.DrawObject.DrawHearts;
+import kafka.KafkaProducerBombExplosion;
 import player_and_bomb_tracker.Bomb;
 import player_and_bomb_tracker.BombExplosion;
 import frontend.UI.UiComponent;
@@ -29,6 +31,7 @@ public class GameMapInitializer {
     private int playersAlive = 4;
     private boolean exploded = false;
     private int cratesExploded = 0;
+    private int numberOfBreakable;
 
     private List<Bomb> bombList= new ArrayList<>();
     private Collection<Bomb> explosionList= new ArrayList<>();
@@ -36,11 +39,15 @@ public class GameMapInitializer {
     private List<Player> exp = new ArrayList<>();
     private List<Player> playersList = new ArrayList<>();
 
-    public GameMapInitializer(int width, int height) {
+    //kafka stuff
+    KafkaProducerBombExplosion kafkaProducerBombExplosion;
+
+    public GameMapInitializer(int width, int height, KafkaProducerBombExplosion kafkaProducerBombExplosion) {
         this.width = width;
         this.height = height;
         this.tiles = new BlockEntityEnum[height][width];
-        placeBreakable();
+        this.kafkaProducerBombExplosion = kafkaProducerBombExplosion;
+        this.numberOfBreakable = placeBreakable();
         placeUnbreakableAndGrass();
     }
 
@@ -130,6 +137,10 @@ public class GameMapInitializer {
     }
 
     private synchronized List<BombExplosion> explodeBomb(Bomb bomb){
+        BombExplosionData bombExplosionDataToBeSent = new BombExplosionData();
+
+        bombExplosionDataToBeSent.playerId = bomb.getPlayer().getId();
+
         for(int i = 0; i < bombList.size(); i++){
             Bomb bombToFind = bombList.get(i);
             if(bombToFind.getRowIndex() == bomb.getRowIndex() && bombToFind.getColIndex() == bomb.getColIndex()){
@@ -141,6 +152,8 @@ public class GameMapInitializer {
         int eRow = bomb.getRowIndex();
         int eCol = bomb.getColIndex();
 
+        int cratesExplodedBeforeExplosion = bomb.getPlayer().getCratesDestroyed();
+
         //crate explosion handling
         boolean northOpen = true;
         boolean southOpen = true;
@@ -150,7 +163,6 @@ public class GameMapInitializer {
         for (int i = 1; i < bomb.getExplosionRadius() + 1; i++) {
             if (eRow - i >= 0 && northOpen) {
                 northOpen = bombCoordinateCheck(eRow - i, eCol, northOpen, bomb);
-
             }
             if (eRow - i <= height && southOpen) {
                 southOpen = bombCoordinateCheck(eRow + i, eCol, southOpen, bomb);
@@ -163,20 +175,29 @@ public class GameMapInitializer {
             }
         }
 
-        playerInExplosion(bomb);
+        bombExplosionDataToBeSent.playerLivesTaken = playerInExplosion(bomb);
+        bombExplosionDataToBeSent.boxesDestroyed = bomb.getPlayer().getCratesDestroyed() - cratesExplodedBeforeExplosion;
+
         List<BombExplosion> bombExplosionsToBeRemoved = new ArrayList<>();
         for(int i = bombExplosionCoords.size() - 1; i >= 0; i--){
             bombExplosionsToBeRemoved.add(bombExplosionCoords.get(i));
+        }
+
+        //send explosion data through kafka
+        try {
+            kafkaProducerBombExplosion.send(bombExplosionDataToBeSent);
+        } catch (Exception e){
+            System.out.println(e);
         }
 
         return bombExplosionsToBeRemoved;
     }
 
     public void createPlayer(UiComponent uiComponent){
-        player1 = new Player(PLAYER_X_START, PLAYER_Y_START, this, "Player1");
-        player2 = new Player(PLAYER_X_START * 12+20, PLAYER_Y_START, this,"Player2");
-        player3 = new Player(PLAYER_X_START, PLAYER_Y_START * 12+20, this,"Player3");
-        player4 = new Player(PLAYER_X_START * 12-20, PLAYER_Y_START * 12+20, this,"Player4");
+        player1 = new Player(PLAYER_X_START, PLAYER_Y_START, this, "Player1", 0);
+        player2 = new Player(PLAYER_X_START * 12+20, PLAYER_Y_START, this,"Player2", 1);
+        player3 = new Player(PLAYER_X_START, PLAYER_Y_START * 12+20, this,"Player3", 2);
+        player4 = new Player(PLAYER_X_START * 12-20, PLAYER_Y_START * 12+20, this,"Player4", 3);
 
         playersList.add(player1);
         playersList.add(player2);
@@ -326,7 +347,9 @@ public class GameMapInitializer {
         }
     }
 
-    public void playerInExplosion(Bomb bomb){
+    public ArrayList<Integer> playerInExplosion(Bomb bomb){
+        ArrayList<Integer> killedPlayers = new ArrayList<Integer>();
+
         for (BombExplosion bomb_exp : getBombExplosionCoords()) {
             if (player1.IsAlive() && collidingCircles(player1, squareToPixel(bomb_exp.getColIndex()), squareToPixel(bomb_exp.getRowIndex()))) {
                 if (!player1.isInvincible()) {
@@ -334,6 +357,7 @@ public class GameMapInitializer {
 
                     if (!exploded) {
                         exp.add(bomb.getPlayer());
+                        killedPlayers.add(0);
                         System.out.println("PLAYER 1 was killed by " + bomb.getPlayer().getName());
                     }
                 } else {
@@ -348,6 +372,7 @@ public class GameMapInitializer {
 
                     if (!exploded) {
                         exp.add(bomb.getPlayer());
+                        killedPlayers.add(1);
                         System.out.println("PLAYER 2 was killed by " + bomb.getPlayer().getName());
                     }
                 } else {
@@ -361,6 +386,7 @@ public class GameMapInitializer {
 
                     if (!exploded) {
                         exp.add(bomb.getPlayer());
+                        killedPlayers.add(2);
                         System.out.println("PLAYER 3 was killed by " + bomb.getPlayer().getName());
                     }
                 } else {
@@ -373,6 +399,7 @@ public class GameMapInitializer {
 
                     if (!exploded) {
                         exp.add(bomb.getPlayer());
+                        killedPlayers.add(3);
                         System.out.println("PLAYER 4 was killed by " + bomb.getPlayer().getName());
                     }
                 } else {
@@ -380,18 +407,24 @@ public class GameMapInitializer {
                 }
             }
         }
+
+        return killedPlayers;
     }
 
-    private void placeBreakable () {
+    private int placeBreakable () {
+        int breakableCount = 0;
+
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 double r = Math.random();
                 if (r < CHANCE_FOR_BREAKABLE_BLOCK) {
                     tiles[i][j] = BlockEntityEnum.CRATE;
+                    breakableCount += 1;
                 }
             }
         }
         clearSpawn();
+        return breakableCount;
     }
 
     private void clearSpawn () {
@@ -532,5 +565,13 @@ public class GameMapInitializer {
                 (circleDistanceY - squareSize/2)^2;
 
         return (cornerDistance <= (circleRadius^2));
+    }
+
+    public int getNumberOfBreakable() {
+        return numberOfBreakable;
+    }
+
+    public List<Player> getPlayersList(){
+        return  playersList;
     }
 }

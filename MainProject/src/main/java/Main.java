@@ -1,9 +1,14 @@
+import domain.GameStartData;
 import frontend.UI.UiFrame;
 import kafka.KafkaConsumerProcessedResult;
+import kafka.KafkaProducerBombExplosion;
+import kafka.KafkaProducerGameInitializer;
 import map_tracker.GameMapInitializer;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     private static final int TIME_STEP = 30;
@@ -24,7 +29,10 @@ public class Main {
     }
 
     private static void startGame() {
-        GameMapInitializer floor = new GameMapInitializer(width, height);
+        KafkaProducerBombExplosion kafkaProducerBombExplosion = new KafkaProducerBombExplosion();
+        GameMapInitializer floor = new GameMapInitializer(width, height, kafkaProducerBombExplosion);
+        initialiseScoreboardProject(floor.getNumberOfBreakable());
+
         UiFrame frame = new UiFrame("Le Boomberman", floor);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,5 +79,29 @@ public class Main {
 //            floor.playerInExplosion();
 //            floor.setPlayersVulnerable();
 //        }
+    }
+
+    private static void initialiseScoreboardProject(int numberOfCrates){
+        KafkaProducerGameInitializer kafkaProducerGameInitializer = new KafkaProducerGameInitializer();
+
+        List<String> playerNames = new ArrayList<>();
+        playerNames.add("Ioan");
+        playerNames.add("Sebastian");
+        playerNames.add("Paul");
+        playerNames.add("Petra");
+
+        GameStartData gameStartData = new GameStartData();
+        gameStartData.pointsForBox = 10;
+        gameStartData.livesPerPlayer = 3;
+        gameStartData.numberOfBoxes = numberOfCrates;
+        gameStartData.numberOfPlayers = 4;
+        gameStartData.playerNames = playerNames;
+        gameStartData.pointsForLife = 50;
+
+        try {
+            kafkaProducerGameInitializer.send(gameStartData);
+        } catch (Exception e){
+            System.out.println(e);
+        }
     }
 }

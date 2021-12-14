@@ -30,7 +30,7 @@ public class KafkaConsumerGameInitializer extends BaseKafkaConsumer{
                 try {
                     data = objectMapper.readValue(record.value(), GameStartData.class);
 
-                    System.out.print(data.numberOfPlayers + " " + data.livesPerPlayer + " " + data.numberOfBoxes + " " + data.pointsForBox + " " + data.pointsForLife);
+                    System.out.println(data.numberOfPlayers + " " + data.livesPerPlayer + " " + data.numberOfBoxes + " " + data.pointsForBox + " " + data.pointsForLife);
 
                     gameStartData.add(data);
                 } catch (IOException e) {

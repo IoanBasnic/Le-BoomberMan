@@ -8,12 +8,14 @@ import domain.TopicNames;
 import frontend.UI.DrawObject.DrawHearts;
 import frontend.UI.DrawObject.DrawScoreboard;
 import frontend.UI.UiFrame;
+import frontend.game_components.Player;
 import map_tracker.GameMapInitializer;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class KafkaConsumerProcessedResult extends BaseKafkaConsumer{
     UiFrame frame;
@@ -38,26 +40,27 @@ public class KafkaConsumerProcessedResult extends BaseKafkaConsumer{
                     ProcessingResultData data = objectMapper.readValue(record.value(), ProcessingResultData.class);
 
                     //process data
-                    DrawHearts drawHearts = frame.getUiComponent().getDrawHearts();
                     DrawScoreboard drawScoreboard = frame.getUiComponent().getScoreboard();
 
                     int playerCount = 0;
-                    ArrayList<Integer> heartsAtBeginning = drawHearts.getPlayersHearts();
+                    List<Player> playersInMainProject = gameMap.getPlayersList();
+
                     ArrayList<Integer> scoresAtBeginning = drawScoreboard.getPlayersScores();
 
-                    for(KafkaPlayer player : data.players){
+                    for(KafkaPlayer playerFromKafka : data.players){
+                        Player currentPlayerInMain = playersInMainProject.stream()
+                                .peek(player -> System.out.println("will filter " + player))
+                                .filter(x -> x.getId() == playerFromKafka.playerId)
+                                .findFirst()
+                                .get();
 
-                        if(!heartsAtBeginning.get(playerCount).equals(player.lives)) {
-                            drawHearts.setPlayerHeartsById(playerCount, player.lives);
 
-                            if(player.lives == 0){
-                                gameMap.killPlayer(player.playerId);
-                            }
+                        if(playerFromKafka.lives != currentPlayerInMain.getNoLifes()){
+                            System.out.println("WARNING! Player with id: " + playerFromKafka.playerId + " has a different amount of lives in Scoreboard project " + currentPlayerInMain.getNoLifes() + " vs " + playerFromKafka.lives);
                         }
 
-                        if(!scoresAtBeginning.get(playerCount).equals(player.score))
-                            drawScoreboard.setPlayerScoreById(playerCount, player.score);
-
+                        if(!scoresAtBeginning.get(playerCount).equals(playerFromKafka.score))
+                            drawScoreboard.setPlayerScoreById(playerCount, playerFromKafka.score);
 
                         playerCount++;
                     }
