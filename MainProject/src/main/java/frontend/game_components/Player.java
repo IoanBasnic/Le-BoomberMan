@@ -5,6 +5,7 @@ import map_tracker.GameMapInitializer;
 public class Player extends GameObject {
 
     private final static int PLAYER_PIXELS_BY_STEP = 4;
+    private Integer id;
     private boolean isAlive;
     private GameMapInitializer floor;
     private String name;
@@ -74,12 +75,13 @@ public class Player extends GameObject {
         bombsPlaced--;
     }
 
-    public Player(int PLAYER_START_X, int PLAYER_START_Y, GameMapInitializer floor, String name) {
+    public Player(int PLAYER_START_X, int PLAYER_START_Y, GameMapInitializer floor, String name, Integer id) {
         super(PLAYER_START_X, PLAYER_START_Y, PLAYER_PIXELS_BY_STEP);
         this.floor = floor;
         this.name = name;
         this.noLifes = 3;
         this.invincible = false;
+        this.id = id;
     }
 
     public void playerMoveBack(Move move, int deltaX, int deltaY) {
@@ -91,5 +93,9 @@ public class Player extends GameObject {
     }
     public String getName(){
         return this.name;
+    }
+
+    public Integer getId() {
+        return id;
     }
 }
