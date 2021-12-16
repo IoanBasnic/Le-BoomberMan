@@ -2,6 +2,11 @@ package player_and_bomb_tracker;
 
 import frontend.game_components.Player;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class Bomb
 {
     // Constants are static by definition.
@@ -10,7 +15,7 @@ public class Bomb
     private final int rowIndex;
     private final int colIndex;
     private int explosionRadius;
-    private boolean playerLeft;
+    private List<Boolean> playersLeft;
     private final Player player;
 
     public Bomb(final int rowIndex, final int colIndex, final Player player) {
@@ -18,7 +23,10 @@ public class Bomb
         this.colIndex = colIndex;
         this.explosionRadius = 1;
         this.player = player;
-        playerLeft = false;
+        playersLeft = new ArrayList<Boolean>(Arrays.asList(new Boolean[4]));
+        Collections.fill(playersLeft, Boolean.TRUE);
+
+        playersLeft.set(player.getId(), Boolean.FALSE);
     }
 
     public Player getPlayer() {
@@ -50,11 +58,11 @@ public class Bomb
         return explosionRadius;
     }
 
-    public boolean isPlayerLeft() {
-        return playerLeft;
+    public boolean isPlayerLeft(Integer playerId) {
+        return playersLeft.get(playerId);
     }
 
-    public void setPlayerLeft(final boolean playerLeft) {
-        this.playerLeft = playerLeft;
+    public void setPlayerLeft(final boolean playerLeft, Integer playerId) {
+        this.playersLeft.set(playerId, playerLeft);
     }
 }
