@@ -463,15 +463,17 @@ public class GameMapInitializer {
     }
 
     public boolean collisionWithBombs(Player player) {
-        boolean playerLeftBomb = true;
-
         for (Bomb bomb : bombList) {
-            if (player != null) {
-                playerLeftBomb = bomb.isPlayerLeft();
-            }
+
             assert player != null;
-            if(playerLeftBomb && collidingCircles(player, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
-                return true;
+
+            if(Objects.equals(player.getId(), bomb.getPlayer().getId())){
+                if(bomb.isPlayerLeft(player.getId()) && collidingCircles(player, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
+                    return true;
+                }
+            }
+            else {
+                return collidingCircles(player, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()));
             }
         }
         return false;
@@ -501,17 +503,24 @@ public class GameMapInitializer {
         return false;
     }
 
+    public boolean squareHasPlayer(int rowIndex, int colIndex, Player player){
+        for (Player p: playersList) {
+            if(p.getRowIndex()==rowIndex && p.getColIndex()==colIndex && !Objects.equals(player.getId(), p.getId())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void checkIfPlayerLeftBomb(Player player){
         for (Bomb bomb: bombList) {
-            if(!bomb.isPlayerLeft()){
+            if(!bomb.isPlayerLeft(player.getId())){
                 if(!collidingCircles(player, squareToPixel(bomb.getColIndex()), squareToPixel(bomb.getRowIndex()))){
-                    bomb.setPlayerLeft(true);
-                }
-                else{
+                    bomb.setPlayerLeft(true, player.getId());
                 }
             }
             else{
-                bomb.setPlayerLeft(false);
+                bomb.setPlayerLeft(false, player.getId());
             }
         }
     }

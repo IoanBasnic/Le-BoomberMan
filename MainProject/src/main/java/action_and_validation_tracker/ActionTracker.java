@@ -9,17 +9,10 @@ import javax.swing.*;
 
 public class ActionTracker {
 
-    public ActionTracker() {
-
-    }
-
     public void movePlayer(GameObject.Move move, int deltaX, int deltaY, Player player, GameMapInitializer gameMapInitializer) {
         player.playerMove(deltaX, deltaY);
-        if(gameMapInitializer.collisionWithBlock(player)){
-            player.playerMoveBack(move, deltaX, deltaY);
-        }
-        if(gameMapInitializer.collisionWithBombs(player)){
-            System.out.println("Player " + player.getName() + "  Collision with BOMB " + move);
+        if(gameMapInitializer.collisionWithBlock(player) || gameMapInitializer.collisionWithBombs(player)){
+            System.out.println("Player " + player.getName() + "  Collision with BOMB OR BLOCK" + move);
             player.playerMoveBack(move, deltaX, deltaY);
             gameMapInitializer.checkIfPlayerLeftBomb(player);
         }
@@ -27,7 +20,7 @@ public class ActionTracker {
     }
 
     public void dropBomb(int rowIndex, int colIndex, GameMapInitializer floor, Player player) {
-        if(!floor.squareHasBomb(rowIndex, colIndex)){
+        if(!floor.squareHasBomb(rowIndex, colIndex) && !floor.squareHasPlayer(rowIndex, colIndex, player)){
             if(player.getBombsPlaced() < 3){
                 Bomb b = new Bomb(rowIndex, colIndex, player);
 
@@ -72,17 +65,6 @@ public class ActionTracker {
         animation4.addAction("8",    GameObject.Move.UP);
         animation4.addAction("5",  GameObject.Move.DOWN);
         animation4.addBombAction("2", player4);
-
-//        uiComponent.getInputMap().put(KeyStroke.getKeyStroke('8'), "moveRight4");
-//        uiComponent.getInputMap().put(KeyStroke.getKeyStroke('4'), "moveLeft4");
-//        uiComponent.getInputMap().put(KeyStroke.getKeyStroke('8'), "moveUp4");
-//        uiComponent.getInputMap().put(KeyStroke.getKeyStroke('5'), "moveDown4");
-//        uiComponent.getInputMap().put(KeyStroke.getKeyStroke('2'), "dropBomb4");
-//        uiComponent.getActionMap().put("moveRight4", player4.right);
-//        uiComponent.getActionMap().put("moveLeft4", player4.left);
-//        uiComponent.getActionMap().put("moveUp4", player4.up);
-//        uiComponent.getActionMap().put("moveDown4", player4.down);
-//        uiComponent.getActionMap().put("dropBomb4", player4.dropBomb);
     }
 
 }
