@@ -22,4 +22,5 @@ public class KafkaProducerBombExplosion extends BaseKafkaProducer {
             e.printStackTrace();
         }
     }
+
 }

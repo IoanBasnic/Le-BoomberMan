@@ -5,7 +5,6 @@ import domain.GameStartData;
 import domain.KafkaPlayer;
 import domain.ProcessingResultData;
 import domain.TopicNames;
-import frontend.UI.DrawObject.DrawHearts;
 import frontend.UI.DrawObject.DrawScoreboard;
 import frontend.UI.UiFrame;
 import frontend.game_components.Player;
@@ -16,6 +15,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class KafkaConsumerProcessedResult extends BaseKafkaConsumer{
     UiFrame frame;
@@ -27,9 +27,11 @@ public class KafkaConsumerProcessedResult extends BaseKafkaConsumer{
         this.gameMap = gameMap;
     }
 
+
     public GameStartData runConsumer() {
         final Consumer<Long, String> consumer = createConsumer();
         ObjectMapper objectMapper = new ObjectMapper();
+        final boolean[] areNamesSet = {false, false, false, false};
 
         while (true) {
             final ConsumerRecords<Long, String> consumerRecords =
@@ -54,6 +56,10 @@ public class KafkaConsumerProcessedResult extends BaseKafkaConsumer{
                                 .findFirst()
                                 .get();
 
+                        if (!areNamesSet[playerCount]) {
+                            drawScoreboard.setPlayerNameById(playerCount, playerFromKafka.name);
+                            areNamesSet[playerCount] = true;
+                        }
 
                         if(playerFromKafka.lives != currentPlayerInMain.getNoLifes()){
                             System.out.println("WARNING! Player with id: " + playerFromKafka.playerId + " has a different amount of lives in Scoreboard project " + currentPlayerInMain.getNoLifes() + " vs " + playerFromKafka.lives);

@@ -194,10 +194,10 @@ public class GameMapInitializer {
     }
 
     public void createPlayer(UiComponent uiComponent){
-        player1 = new Player(PLAYER_X_START, PLAYER_Y_START, this, "Player1", 0);
-        player2 = new Player(PLAYER_X_START * 12+20, PLAYER_Y_START, this,"Player2", 1);
-        player3 = new Player(PLAYER_X_START, PLAYER_Y_START * 12+20, this,"Player3", 2);
-        player4 = new Player(PLAYER_X_START * 12-20, PLAYER_Y_START * 12+20, this,"Player4", 3);
+        player1 = new Player(PLAYER_X_START, PLAYER_Y_START, this, "Ioan", 0);
+        player2 = new Player(PLAYER_X_START * 12+20, PLAYER_Y_START, this,"Sebastian", 1);
+        player3 = new Player(PLAYER_X_START, PLAYER_Y_START * 12+20, this,"Paul", 2);
+        player4 = new Player(PLAYER_X_START * 12-20, PLAYER_Y_START * 12+20, this,"Petra", 3);
 
         playersList.add(player1);
         playersList.add(player2);

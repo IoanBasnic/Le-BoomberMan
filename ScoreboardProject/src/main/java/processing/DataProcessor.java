@@ -27,10 +27,6 @@ public class DataProcessor {
             player.lives = data.livesPerPlayer;
             player.score = 0;
 
-            if(i < data.playerNames.size())
-                player.name = data.playerNames.get(i);
-            else player.name = "player with id " + i;
-
             players.put(i, player);
         }
     }

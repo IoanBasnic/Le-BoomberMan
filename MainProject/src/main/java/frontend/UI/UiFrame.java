@@ -6,6 +6,7 @@ import map_tracker.GameMapInitializer;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import frontend.UI.DrawObject.DrawScoreboard;
 
 import java.awt.event.KeyEvent;
 
@@ -28,5 +29,9 @@ public class UiFrame extends JFrame
     public UiComponent getUiComponent() {
 		return uiComponent;
     }
+
+	public DrawScoreboard getScoreBoard() {
+		return uiComponent.getScoreboard();
+	}
 }
 

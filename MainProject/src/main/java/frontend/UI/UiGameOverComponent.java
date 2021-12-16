@@ -2,10 +2,15 @@ package frontend.UI;
 
 import javax.swing.*;
 import java.awt.*;
+import frontend.UI.DrawObject.DrawScoreboard;
+import map_tracker.GameMapInitializer;
 
 public class UiGameOverComponent extends JComponent{
 
-    public UiGameOverComponent() {
+    DrawScoreboard scoreboard;
+
+    public UiGameOverComponent(DrawScoreboard scoreboard) {
+        this.scoreboard = scoreboard;
     }
 
     @Override
@@ -18,21 +23,23 @@ public class UiGameOverComponent extends JComponent{
         Font font = new Font("Serif", Font.PLAIN, 60);
         g2d.setFont(font);
 
-        g2d.drawString("GAME OVER!",66, 66);
+        g2d.drawString("GAME OVER!",312, 66);
+
+        scoreboard.drawScoreboard(g2d);
 
         Font button_font = new Font("Serif", Font.PLAIN, 30);
-        JButton butt1 = new JButton();
-        butt1.setLocation(150, 90);
-        butt1.setSize(200, 50);
-        butt1.setBackground(Color.GRAY);
-        butt1.setBorderPainted(true);
-        butt1.setOpaque(true);
-        butt1.setFont(button_font);
-        butt1.setText("NEW GAME");
-        this.add(butt1);
+//        JButton butt1 = new JButton();
+//        butt1.setLocation(150, 90);
+//        butt1.setSize(200, 50);
+//        butt1.setBackground(Color.GRAY);
+//        butt1.setBorderPainted(true);
+//        butt1.setOpaque(true);
+//        butt1.setFont(button_font);
+//        butt1.setText("NEW GAME");
+//        this.add(butt1);
 
         JButton butt2 = new JButton();
-        butt2.setLocation(150, 160);
+        butt2.setLocation(400, 500);
         butt2.setSize(200, 50);
         butt2.setBackground(Color.GRAY);
         butt2.setBorderPainted(true);
