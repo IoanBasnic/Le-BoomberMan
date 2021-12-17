@@ -85,7 +85,6 @@ public class UiComponent extends JComponent implements Runnable {
 			}
 		}
 
-
 		ArrayList<Player> players = new ArrayList<Player>();
 		players.add(gameMapInitializer.getPlayer1());
 		players.add(gameMapInitializer.getPlayer2());

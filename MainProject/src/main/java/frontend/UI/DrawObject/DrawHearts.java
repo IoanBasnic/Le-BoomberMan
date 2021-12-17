@@ -56,19 +56,8 @@ public class DrawHearts {
         }
     }
 
-    public void setPlayersHearts(ArrayList<Integer> playersHearts) {
-        this.playersHearts = playersHearts;
-    }
-    public ArrayList<Integer> getPlayersHearts() {
-        return this.playersHearts;
-    }
-
     public void setPlayerHeartsById(int playerId, int playersHearts) {
         this.playersHearts.set(playerId - 1, playersHearts);
-    }
-
-    public int getPlayerHeartsById(int playerId) {
-        return this.playersHearts.get(playerId);
     }
 
     public boolean isNamesSet() {

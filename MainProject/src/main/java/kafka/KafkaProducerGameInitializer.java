@@ -6,7 +6,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 
 public class KafkaProducerGameInitializer extends BaseKafkaProducer {
-    public void send(GameStartData data) throws Exception{
+    public void send(GameStartData data) {
         long time = System.currentTimeMillis();
 
         try{

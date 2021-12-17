@@ -5,7 +5,6 @@ import frontend.game_components.GameObject;
 import frontend.game_components.Player;
 import map_tracker.GameMapInitializer;
 import player_and_bomb_tracker.Bomb;
-import javax.swing.*;
 
 public class ActionTracker {
 
@@ -24,9 +23,7 @@ public class ActionTracker {
             if(player.getBombsPlaced() < 3){
                 Bomb b = new Bomb(rowIndex, colIndex, player);
 
-                //TODO: clean up one flow
                 floor.createBombThread(b, player);
-//                floor.addToBombList(b, player);
             }
             else{
                 System.out.println("RUN out of bombs");
@@ -66,5 +63,4 @@ public class ActionTracker {
         animation4.addAction("5",  GameObject.Move.DOWN);
         animation4.addBombAction("2", player4);
     }
-
 }

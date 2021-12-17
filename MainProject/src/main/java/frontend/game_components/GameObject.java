@@ -44,7 +44,6 @@ public class GameObject
 
     public void moveBack(Move currentDirection, int deltaX, int deltaY, GameMapInitializer floor) {
         if (currentDirection == Move.DOWN) {
-           // System.out.println(deltaX + "  " + deltaY);
             if(deltaX == -1){
                 move(1,0);
             }
@@ -55,7 +54,6 @@ public class GameObject
         } else if (currentDirection == Move.UP) {
             move(0,1);
         } else if (currentDirection == Move.LEFT) {
-            //System.out.println(deltaX + "  " + deltaY);
             if(deltaY == 1){
                 move(0, -1);
             }
@@ -64,7 +62,6 @@ public class GameObject
             }
             move(1, 0);
         } else if (currentDirection == Move.RIGHT) {
-           // System.out.println(deltaX + "  " + deltaY);
             if(deltaY == 1){
                 move(0, -1);
             }

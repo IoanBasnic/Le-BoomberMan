@@ -4,7 +4,6 @@ public class BombExplosion
 {
     private int rowIndex;
     private int colIndex;
-    private int duration = 5;
     private Bomb bomb;
 
     public BombExplosion(int rowIndex, int colIndex, Bomb bomb)
@@ -24,13 +23,5 @@ public class BombExplosion
 
     public int getColIndex() {
         return colIndex;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public synchronized void setDuration(final int duration) {
-        this.duration = duration;
     }
 }

@@ -15,7 +15,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class KafkaConsumerProcessedResult extends BaseKafkaConsumer{
     UiFrame frame;
@@ -66,7 +65,7 @@ public class KafkaConsumerProcessedResult extends BaseKafkaConsumer{
                         playerCount++;
                     }
 
-                    System.out.print(data.gameStatus + " " + data.players + " " + data.winner);
+                    System.out.print(data.gameStatus);
 
                 } catch (IOException e) {
                     e.printStackTrace();
