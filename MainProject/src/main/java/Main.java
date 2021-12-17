@@ -1,9 +1,11 @@
+import domain.GameOver;
 import domain.GameStartData;
 import frontend.UI.UiFrame;
 import frontend.UI.UiGameOverFrame;
 import kafka.KafkaConsumerProcessedResult;
 import kafka.KafkaProducerBombExplosion;
 import kafka.KafkaProducerGameInitializer;
+import kafka.KafkaProducerGameOver;
 import map_tracker.GameMapInitializer;
 
 import javax.swing.*;
@@ -46,10 +48,12 @@ public class Main {
         };
         thread.start();
 
+        KafkaProducerGameOver gameOverProducer = new KafkaProducerGameOver();
+
         Action doOneStep = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    tick(frame, floor, kafkaProducerBombExplosion);
+                    tick(frame, floor, kafkaProducerBombExplosion, gameOverProducer);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
@@ -60,17 +64,21 @@ public class Main {
         clockTimer.start();
     }
 
-    private static void gameOver(UiFrame frame, KafkaProducerBombExplosion kafkaProducerBombExplosion) {
+    private static void gameOver(UiFrame frame, KafkaProducerBombExplosion kafkaProducerBombExplosion, KafkaProducerGameOver gameOverProducer) {
         frame.dispose();
         UiGameOverFrame game_over_frame = new UiGameOverFrame("GAME OVER", frame.getScoreBoard());
         game_over_frame.repaint();
         clockTimer.stop();
+
+        GameOver gameOver = new GameOver();
+        gameOver.gameOver = true;
+        gameOverProducer.send(gameOver);
         kafkaProducerBombExplosion.close();
     }
 
-    private static void tick(UiFrame frame, GameMapInitializer floor, KafkaProducerBombExplosion kafkaProducerBombExplosion) throws InterruptedException {
+    private static void tick(UiFrame frame, GameMapInitializer floor, KafkaProducerBombExplosion kafkaProducerBombExplosion, KafkaProducerGameOver gameOverProducer) throws InterruptedException {
         if (floor.getIsGameOver()) {
-            gameOver(frame, kafkaProducerBombExplosion);
+            gameOver(frame, kafkaProducerBombExplosion, gameOverProducer);
         }
         else {
             frame.getUiComponent().repaint();
