@@ -28,10 +28,10 @@ public class KafkaConsumerProcessedResult extends BaseKafkaConsumer{
     }
 
 
+
     public GameStartData runConsumer() {
         final Consumer<Long, String> consumer = createConsumer();
         ObjectMapper objectMapper = new ObjectMapper();
-        final boolean[] areNamesSet = {false, false, false, false};
 
         while (true) {
             final ConsumerRecords<Long, String> consumerRecords =
@@ -55,11 +55,6 @@ public class KafkaConsumerProcessedResult extends BaseKafkaConsumer{
                                 .filter(x -> x.getId() == playerFromKafka.playerId)
                                 .findFirst()
                                 .get();
-
-                        if (!areNamesSet[playerCount]) {
-                            drawScoreboard.setPlayerNameById(playerCount, playerFromKafka.name);
-                            areNamesSet[playerCount] = true;
-                        }
 
                         if(playerFromKafka.lives != currentPlayerInMain.getNoLifes()){
                             System.out.println("WARNING! Player with id: " + playerFromKafka.playerId + " has a different amount of lives in Scoreboard project " + currentPlayerInMain.getNoLifes() + " vs " + playerFromKafka.lives);

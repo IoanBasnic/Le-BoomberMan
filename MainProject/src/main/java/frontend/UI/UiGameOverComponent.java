@@ -22,21 +22,13 @@ public class UiGameOverComponent extends JComponent{
                 RenderingHints.VALUE_ANTIALIAS_ON);
         Font font = new Font("Serif", Font.PLAIN, 60);
         g2d.setFont(font);
+        g2d.setColor(Color.GREEN);
 
         g2d.drawString("GAME OVER!",312, 66);
 
         scoreboard.drawScoreboard(g2d);
 
         Font button_font = new Font("Serif", Font.PLAIN, 30);
-//        JButton butt1 = new JButton();
-//        butt1.setLocation(150, 90);
-//        butt1.setSize(200, 50);
-//        butt1.setBackground(Color.GRAY);
-//        butt1.setBorderPainted(true);
-//        butt1.setOpaque(true);
-//        butt1.setFont(button_font);
-//        butt1.setText("NEW GAME");
-//        this.add(butt1);
 
         JButton butt2 = new JButton();
         butt2.setLocation(400, 500);
@@ -48,5 +40,7 @@ public class UiGameOverComponent extends JComponent{
         butt2.setText("QUIT!");
         this.add(butt2);
         this.repaint();
+
+        butt2.addActionListener(new QuitListener());
     }
 }

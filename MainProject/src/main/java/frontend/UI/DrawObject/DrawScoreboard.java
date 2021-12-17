@@ -25,24 +25,31 @@ public class DrawScoreboard {
                 RenderingHints.VALUE_ANTIALIAS_ON);
         Font font = new Font("Serif", Font.PLAIN, 60);
         g2d.setFont(font);
-        g2d.setColor(Color.RED.brighter());
+        g2d.setColor(Color.GREEN);
 
-        g2d.drawString("Scoreboard:", 20, 60);
+        g2d.drawString("Scoreboard:", 364, 165);
 
         font = new Font("Serif", Font.PLAIN, 30);
         g2d.setFont(font);
 
-        g2d.drawString(playerNames.get(0), 20, 120);
-        g2d.drawString(playersScores.get(0).toString(), 300, 120);
-
-        g2d.drawString(playerNames.get(1), 20, 160);
-        g2d.drawString(playersScores.get(1).toString(), 300, 160);
-
-        g2d.drawString(playerNames.get(2), 20, 200);
-        g2d.drawString(playersScores.get(2).toString(), 300, 200);
-
-        g2d.drawString(playerNames.get(3), 20, 240);
-        g2d.drawString(playersScores.get(3).toString(), 300, 240);
+        ArrayList<Integer> playersScores_copy = new ArrayList<>(playersScores);
+        String stringToDraw = "WINNER: ";
+        for (int i = 0; i < 4; i++){
+            int max_score = -1;
+            int max_score_index = -1;
+            for (int j = 0; j < 4; j++){
+                if(playersScores_copy.get(j) > max_score) {
+                    max_score = playersScores_copy.get(j);
+                    max_score_index = j;
+                }
+            }
+            g2d.drawString(stringToDraw + playerNames.get(max_score_index), 330, 225 + 40 * i);
+            g2d.drawString(playersScores.get(max_score_index).toString(), 650, 225 + 40 * i);
+            playersScores_copy.set(max_score_index, -1);
+            if (i == 0){
+                stringToDraw = "";
+            }
+        }
     }
 
     public void drawScoreboard(Graphics2D g2d, GameMapInitializer gameMapInitializer, int SQUARE_SIZE) {

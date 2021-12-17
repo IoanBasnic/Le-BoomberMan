@@ -52,7 +52,7 @@ public class DrawHearts {
 
     private void hearts(int Player, Graphics2D g2d, GameMapInitializer gameMapInitializer, int SQUARE_SIZE, int Y) {
         for(int i = 0;  i< Player; i++) {
-            g2d.drawString("\u2665", gameMapInitializer.getWidth() * SQUARE_SIZE + SQUARE_SIZE*(3+i + 1), Y);
+            g2d.drawString("\u2665", gameMapInitializer.getWidth() * SQUARE_SIZE + SQUARE_SIZE*(3+i + 2), Y);
         }
     }
 
