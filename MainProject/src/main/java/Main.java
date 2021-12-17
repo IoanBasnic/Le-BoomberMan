@@ -1,5 +1,6 @@
 import domain.GameStartData;
 import frontend.UI.UiFrame;
+import frontend.UI.UiGameOverFrame;
 import kafka.KafkaConsumerProcessedResult;
 import kafka.KafkaProducerBombExplosion;
 import kafka.KafkaProducerGameInitializer;
@@ -61,15 +62,19 @@ public class Main {
         clockTimer.start();
     }
 
-    private static void gameOver(UiFrame frame, GameMapInitializer floor) throws InterruptedException {
-        clockTimer.stop();
+    private static void gameOver(UiFrame frame) throws InterruptedException {
         frame.dispose();
-        startGame();
+        UiGameOverFrame game_over_frame = new UiGameOverFrame("GAME OVER", frame.getScoreBoard());
+        game_over_frame.repaint();
+        clockTimer.stop();
+
+//        frame.dispose();
+//        startGame();
     }
 
     private static void tick(UiFrame frame, GameMapInitializer floor) throws InterruptedException {
         if (floor.getIsGameOver()) {
-            gameOver(frame, floor);
+            gameOver(frame);
         }
         else {
             frame.getUiComponent().repaint();
@@ -84,18 +89,11 @@ public class Main {
     private static void initialiseScoreboardProject(int numberOfCrates){
         KafkaProducerGameInitializer kafkaProducerGameInitializer = new KafkaProducerGameInitializer();
 
-        List<String> playerNames = new ArrayList<>();
-        playerNames.add("Ioan");
-        playerNames.add("Sebastian");
-        playerNames.add("Paul");
-        playerNames.add("Petra");
-
         GameStartData gameStartData = new GameStartData();
         gameStartData.pointsForBox = 10;
         gameStartData.livesPerPlayer = 3;
         gameStartData.numberOfBoxes = numberOfCrates;
         gameStartData.numberOfPlayers = 4;
-        gameStartData.playerNames = playerNames;
         gameStartData.pointsForLife = 50;
 
         try {

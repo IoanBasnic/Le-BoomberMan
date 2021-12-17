@@ -19,7 +19,4 @@ public class GameStartData {
 
     @JsonProperty("pointsForBox")
     public int pointsForBox;
-
-    @JsonProperty("playerNames")
-    public List<String> playerNames;
 }
