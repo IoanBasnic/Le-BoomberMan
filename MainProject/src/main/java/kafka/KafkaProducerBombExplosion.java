@@ -6,7 +6,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 
 public class KafkaProducerBombExplosion extends BaseKafkaProducer {
-    public void send(BombExplosionData data) throws Exception{
+    public void send(BombExplosionData data) {
         long time = System.currentTimeMillis();
 
         try{

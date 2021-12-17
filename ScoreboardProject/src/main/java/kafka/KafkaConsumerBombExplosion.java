@@ -17,20 +17,11 @@ public class KafkaConsumerBombExplosion extends BaseKafkaConsumer {
 
     public void runConsumer() {
         final Consumer<Long, String> consumer = createConsumer();
-
-        final int giveUp = 100;
-        int noRecordsCount = 0;
         ObjectMapper objectMapper = new ObjectMapper();
 
         while (true) {
             final ConsumerRecords<Long, String> consumerRecords =
                     consumer.poll(1000);
-
-//            if (consumerRecords.count()==0) {
-//                noRecordsCount++;
-//                if (noRecordsCount > giveUp) break;
-//                else continue;
-//            }
 
             consumerRecords.forEach(record -> {
                 try {
@@ -45,8 +36,6 @@ public class KafkaConsumerBombExplosion extends BaseKafkaConsumer {
 
             consumer.commitAsync();
         }
-//        consumer.close();
-//        System.out.println("DONE");
     }
 
 }

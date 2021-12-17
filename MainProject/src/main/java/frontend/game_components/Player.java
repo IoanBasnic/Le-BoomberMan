@@ -13,7 +13,6 @@ public class Player extends GameObject {
     private int noLifes;
     private boolean hit = false;
     private boolean invincible;
-    private int timeInvincible = 150;
     private int cratesDestroyed = 0;
 
     public void setHit(boolean hit){
@@ -31,12 +30,6 @@ public class Player extends GameObject {
         return this.noLifes;
     }
 
-    public int getTimeInvincible(){
-        return this.timeInvincible;
-    }
-    public void setTimeInvincible(int timeInvincible) {
-        this.timeInvincible = timeInvincible;
-    }
 
     public boolean IsAlive() {
         return isAlive;

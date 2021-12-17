@@ -8,8 +8,6 @@ import map_tracker.GameMapInitializer;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
     private static final int TIME_STEP = 30;
@@ -51,7 +49,7 @@ public class Main {
         Action doOneStep = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    tick(frame, floor);
+                    tick(frame, floor, kafkaProducerBombExplosion);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
@@ -62,28 +60,21 @@ public class Main {
         clockTimer.start();
     }
 
-    private static void gameOver(UiFrame frame) throws InterruptedException {
+    private static void gameOver(UiFrame frame, KafkaProducerBombExplosion kafkaProducerBombExplosion) {
         frame.dispose();
         UiGameOverFrame game_over_frame = new UiGameOverFrame("GAME OVER", frame.getScoreBoard());
         game_over_frame.repaint();
         clockTimer.stop();
-
-//        frame.dispose();
-//        startGame();
+        kafkaProducerBombExplosion.close();
     }
 
-    private static void tick(UiFrame frame, GameMapInitializer floor) throws InterruptedException {
+    private static void tick(UiFrame frame, GameMapInitializer floor, KafkaProducerBombExplosion kafkaProducerBombExplosion) throws InterruptedException {
         if (floor.getIsGameOver()) {
-            gameOver(frame);
+            gameOver(frame, kafkaProducerBombExplosion);
         }
         else {
             frame.getUiComponent().repaint();
         }
-//            floor.bombCountdown();
-//            floor.explosionHandler();
-//            floor.playerInExplosion();
-//            floor.setPlayersVulnerable();
-//        }
     }
 
     private static void initialiseScoreboardProject(int numberOfCrates){
@@ -101,5 +92,7 @@ public class Main {
         } catch (Exception e){
             System.out.println(e);
         }
+
+        kafkaProducerGameInitializer.close();
     }
 }

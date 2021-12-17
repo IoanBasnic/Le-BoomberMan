@@ -4,9 +4,7 @@ import frontend.game_components.GameObject;
 import frontend.game_components.Player;
 import map_tracker.GameMapInitializer;
 
-import java.awt.*;
 import java.awt.event.*;
-import java.net.*;
 import java.util.Map;
 import java.util.HashMap;
 import javax.swing.*;
@@ -57,9 +55,6 @@ public class KeyboardAnimation implements ActionListener {
         inputMap.put(pressedKeyStroke, pressedKey);
         actionMap.put(pressedKey, pressedAction);
 
-        Object actionName = inputMap.get(pressedKeyStroke);
-
-
         Action releasedAction = new BombAction(key, null);
         String releasedKey = modifiers + RELEASED + key;
         KeyStroke releasedKeyStroke = KeyStroke.getKeyStroke(releasedKey);
@@ -71,12 +66,9 @@ public class KeyboardAnimation implements ActionListener {
     public void addAction(String keyStroke, GameObject.Move move) {
         //  Separate the key identifier from the modifiers of the KeyStroke
 
-
         int offset = keyStroke.lastIndexOf(" ");
         String key = offset == -1 ? keyStroke : keyStroke.substring(offset + 1);
         String modifiers = keyStroke.replace(key, "");
-
-
 
         //  Get the InputMap and ActionMap of the component
 
@@ -94,7 +86,6 @@ public class KeyboardAnimation implements ActionListener {
         actionMap.put(pressedKey, pressedAction);
 
         //  Create Action and add binding for the released key
-
         Action releasedAction = new AnimationAction(key, null);
         String releasedKey = modifiers + RELEASED + key;
         KeyStroke releasedKeyStroke = KeyStroke.getKeyStroke(releasedKey);
@@ -104,7 +95,6 @@ public class KeyboardAnimation implements ActionListener {
     }
 
     //  Invoked whenever a key is pressed or released
-
     private void handleBombEvent(String key, Player player){
         if (player == null)
         {
@@ -120,12 +110,6 @@ public class KeyboardAnimation implements ActionListener {
         if (bomb.size() == 1) {
             timer2.start();
         }
-
-        //  Stop the Timer when all keys have been released
-
-//        if (bomb.size() == 0) {
-//            timer2.stop();
-//        }
     }
 
     private void handleKeyEvent(String key, GameObject.Move moveDelta) {
@@ -149,7 +133,6 @@ public class KeyboardAnimation implements ActionListener {
     }
 
     //  Invoked when the Timer fires
-
     public void actionPerformed(ActionEvent e) {
         if(player.IsAlive()){
             moveComponent();

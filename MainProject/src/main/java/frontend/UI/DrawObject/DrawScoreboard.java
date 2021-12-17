@@ -4,7 +4,6 @@ import map_tracker.GameMapInitializer;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DrawScoreboard {
 

@@ -2,15 +2,12 @@ package map_tracker;
 
 import action_and_validation_tracker.ActionTracker;
 import domain.BombExplosionData;
-import frontend.UI.DrawObject.DrawHearts;
 import kafka.KafkaProducerBombExplosion;
 import player_and_bomb_tracker.Bomb;
 import player_and_bomb_tracker.BombExplosion;
 import frontend.UI.UiComponent;
 import frontend.game_components.Player;
 
-import javax.swing.*;
-import java.beans.JavaBean;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -100,11 +97,6 @@ public class GameMapInitializer {
             }
         }
         return false;
-    }
-
-    public void addToBombList(Bomb bomb, Player player) {
-        player.updateNoBombs();
-        bombList.add(bomb);
     }
 
     public void createBombThread(Bomb bomb, Player player) {
@@ -228,82 +220,6 @@ public class GameMapInitializer {
         getUi().UpdateMap();
     }
 
-    /**
-     * This method creates a bomb if the given demands are satisfied.
-     */
-    public void bombCountdown() {
-        Collection<Integer> bombIndexesToBeRemoved = new ArrayList<>();
-        explosionList.clear();
-        index = 0;
-        for (Bomb b : bombList) {
-            b.setTimeToExplosion(b.getTimeToExplosion() - 1);
-            //System.out.println("Bomb: " + b.getPlayer().getName() + "  " + b.getTimeToExplosion());
-            if (b.getTimeToExplosion() == 0) {
-                b.getPlayer().removeBomb();
-                bombIndexesToBeRemoved.add(index);
-                //System.out.println("INDEX " + index + " Bomb: " + b.getPlayer().getName());
-                explosionList.add(b);
-                //Explosion(b);
-            }
-            index++;
-        }
-        for (int i : bombIndexesToBeRemoved) {
-            try {
-                bombList.remove(i);
-            } catch (IndexOutOfBoundsException e) {
-                bombList.remove(i-1);
-                System.out.println("CATCHED " + i);
-                System.out.println("SIZE " + bombIndexesToBeRemoved.size());
-            }
-        }
-    }
-
-//    public void explosionHandler(Bomb bomb){
-//        Collection<BombExplosion> explosionsToBeRemoved = new ArrayList<>();
-//
-//        for (BombExplosion e: bombExplosionCoords) {
-//            if(e.getDuration() == 4){
-//                exploded = true;
-//            }
-//
-//            e.setDuration(e.getDuration()-1);
-//            if(e.getDuration()==0){
-//                explosionsToBeRemoved.add(e);
-//                for(Player player : playersList){
-//                    player.setHit(false);
-//                }
-//            }
-//        }
-//        for (BombExplosion e: explosionsToBeRemoved){
-//            exploded = false;
-//            bombExplosionCoords.remove(e);
-//        }
-//
-//        for(Bomb e : explosionList) {
-//            int eRow = e.getRowIndex();
-//            int eCol = e.getColIndex();
-//            boolean northOpen = true;
-//            boolean southOpen = true;
-//            boolean westOpen = true;
-//            boolean eastOpen = true;
-//            bombExplosionCoords.add(new BombExplosion(eRow, eCol, e));
-//            for (int i = 1; i < e.getExplosionRadius() + 1; i++) {
-//                if (eRow - i >= 0 && northOpen) {
-//                    northOpen = bombCoordinateCheck(eRow - i, eCol, northOpen, e);
-//                }
-//                if (eRow - i <= height && southOpen) {
-//                    southOpen = bombCoordinateCheck(eRow + i, eCol, southOpen, e);
-//                }
-//                if (eCol - i >= 0 && westOpen) {
-//                    westOpen = bombCoordinateCheck(eRow, eCol - i, westOpen, e);
-//                }
-//                if (eCol + i <= width && eastOpen) {
-//                    eastOpen = bombCoordinateCheck(eRow, eCol + i, eastOpen, e);
-//                }
-//            }
-//        }
-//    }
-
     public void playerHit(Player player, int PLAYER_X_START2, int PLAYER_Y_START2, int playerId){
         player.setHit(true);
         player.setDead();
@@ -330,21 +246,6 @@ public class GameMapInitializer {
             }
         };
         invincibleThread.start();
-    }
-
-    public void killPlayer(int playerId){
-        if(playerId == 0){
-            player1.kill();
-        }
-        else if(playerId == 1){
-            player2.kill();
-        }
-        else if(playerId == 2){
-            player3.kill();
-        }
-        else if(playerId == 3){
-            player4.kill();
-        }
     }
 
     public ArrayList<Integer> playerInExplosion(Bomb bomb){
@@ -484,7 +385,7 @@ public class GameMapInitializer {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 if(getFloorTile(i, j) != BlockEntityEnum.GRASS){
-                    boolean isIntersecting = squareCircleInstersect(i, j, player);
+                    boolean isIntersecting = squareCircleIntersect(i, j, player);
                     if (isIntersecting) {
                         return true;
                     }
@@ -551,7 +452,7 @@ public class GameMapInitializer {
         return(player.getSize() >= c);
     }
 
-    private boolean squareCircleInstersect(int row, int col, Player player) {
+    private boolean squareCircleIntersect(int row, int col, Player player) {
         // http://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
         int characterX = player.getX();
         int characterY = player.getY();
